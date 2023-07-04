@@ -38,7 +38,8 @@ import static java.lang.String.format;
 
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true,
-        jsr250Enabled = true, prePostEnabled = true)@RequiredArgsConstructor
+        jsr250Enabled = true, prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final UserRepository userRepo;

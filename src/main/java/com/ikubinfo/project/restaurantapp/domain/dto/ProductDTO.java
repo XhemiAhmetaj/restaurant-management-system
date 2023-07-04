@@ -15,6 +15,5 @@ public class ProductDTO {
     private String name;
     private String measurement;
     private Integer quantity;
-    @JsonIgnore
-    private String created_by;
+
 }

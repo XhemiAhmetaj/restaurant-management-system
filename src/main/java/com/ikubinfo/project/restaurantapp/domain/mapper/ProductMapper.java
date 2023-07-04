@@ -16,17 +16,14 @@ public class ProductMapper {
                 .name(p.getName())
                 .measurement(p.getMeasurement().getValue())
                 .quantity(p.getQuantity())
-//                .created_by(p.getCreated_by().getName())
                 .build();
     }
 
-    public static Product toEntity(ProductDTO dto, User user){
+    public static Product toEntity(ProductDTO dto){
         return Product.builder()
                 .name(dto.getName())
                 .measurement(Measurement.valueOf(dto.getMeasurement()))
                 .quantity(dto.getQuantity())
-                .createdAt(LocalDateTime.now())
-                .created_by(user)
                 .build();
     }
 

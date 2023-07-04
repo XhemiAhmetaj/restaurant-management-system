@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.ikubinfo.project.restaurantapp.domain.mapper.ProductMapper.toDto;
+
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -23,7 +26,8 @@ public class ProductServiceImpl implements ProductService {
     private final UserServiceImpl userService;
     @Override
     public ProductDTO addProduct(ProductDTO dto) {
-        return ProductMapper.toDto(productRepository.save(ProductMapper.toEntity(dto, userService.getUserFromToken((Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal()))));
+        Product product =  productRepository.save(ProductMapper.toEntity(dto));
+        return toDto(product);
     }
 
 //    @Override
@@ -45,6 +49,6 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO updateProduct(Long id, ProductUpdatedDTO dto) {
         Product product = productRepository.findById(id).orElseThrow(
                 ()->new ResourceNotFoundException("Product not found"));
-        return ProductMapper.toDto(ProductMapper.updateProduct(product,dto));
+        return toDto(ProductMapper.updateProduct(product,dto));
     }
 }

@@ -46,8 +46,8 @@ public class User implements UserDetails {
     @LastModifiedDate
     private LocalDateTime modified_at;
 
-//    @OneToMany(mappedBy = "created_by")
-//    private List<Product> products = new ArrayList<>();
+//    @OneToMany(mappedBy = "user")
+//    private List<Product> products;
 
 
 
