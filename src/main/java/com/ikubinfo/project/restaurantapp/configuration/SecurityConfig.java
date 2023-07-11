@@ -1,5 +1,6 @@
 package com.ikubinfo.project.restaurantapp.configuration;
 
+import com.ikubinfo.project.restaurantapp.domain.entity.User;
 import com.ikubinfo.project.restaurantapp.repository.UserRepository;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -7,6 +8,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -149,5 +151,10 @@ public class SecurityConfig {
 
     public static Jwt getJwt(){
         return (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    @Bean
+    public AuditorAware<User> auditorAware() {
+        return new SpringSecurityAuditorAware(userRepo);
     }
 }

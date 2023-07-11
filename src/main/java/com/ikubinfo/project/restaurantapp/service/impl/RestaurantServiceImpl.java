@@ -1,11 +1,13 @@
 package com.ikubinfo.project.restaurantapp.service.impl;
 
+import com.ikubinfo.project.restaurantapp.domain.dto.MenuDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.RestaurantTableDTO;
 import com.ikubinfo.project.restaurantapp.domain.entity.RestaurantTable;
 import com.ikubinfo.project.restaurantapp.domain.entity.enums.TableStatus;
 import com.ikubinfo.project.restaurantapp.domain.mapper.RestaurantMapper;
+import com.ikubinfo.project.restaurantapp.repository.MenuRepository;
 import com.ikubinfo.project.restaurantapp.repository.RestaurantTableRepository;
-import com.ikubinfo.project.restaurantapp.service.RestaurantTableService;
+import com.ikubinfo.project.restaurantapp.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -13,16 +15,23 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
 
 @Service
 @RequiredArgsConstructor
-public class RestaurantTableServiceImpl implements RestaurantTableService {
+public class RestaurantServiceImpl implements RestaurantService {
 
+    private final MenuRepository menuRepository;
     private final RestaurantTableRepository repository;
+
+//    @Override
+//    public List<MenuDTO> getMenu() {
+//        return menuRepository.findAll().stream().map(RestaurantMapper::toDto).collect(Collectors.toList());
+//    }
+
     @Override
     public RestaurantTableDTO addTable(RestaurantTableDTO dto) {
-        return RestaurantMapper.toDto(RestaurantMapper.toEntity(dto));
+        RestaurantTable table = RestaurantMapper.toEntity(dto);
+        return RestaurantMapper.toDto(repository.save(table));
     }
 
     @Override
@@ -36,8 +45,7 @@ public class RestaurantTableServiceImpl implements RestaurantTableService {
     @Override
     public RestaurantTableDTO updateTable(Long id, String status) {
         RestaurantTable table = repository.findById(id).orElseThrow(
-                () -> new UsernameNotFoundException(
-                        format("Table not found!")));
+                () -> new UsernameNotFoundException("Table not found!"));
         table.setTableStatus(TableStatus.fromValue(status));
         return RestaurantMapper.toDto(repository.save(table));
     }
@@ -50,13 +58,13 @@ public class RestaurantTableServiceImpl implements RestaurantTableService {
                 .collect(Collectors.toList());
     }
 
-//    @Override
-//    public List<RestaurantTableDTO> listAllAvailableTables() {
-//        return repository.findRestaurantTablesByStatus(Status.AVAILABLE)
-//                .stream()
-//                .map(RestaurantMapper::toDto)
-//                .collect(Collectors.toList());
-//    }
+    @Override
+    public List<RestaurantTableDTO> listAllAvailableTables() {
+        return repository.findRestaurantTablesByTableStatus(TableStatus.AVAILABLE)
+                .stream()
+                .map(RestaurantMapper::toDto)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public List<RestaurantTableDTO> listTablesByCapacity(Integer capacity) {

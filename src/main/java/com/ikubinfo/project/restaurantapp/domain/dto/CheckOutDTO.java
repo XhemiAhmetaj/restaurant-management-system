@@ -1,6 +1,6 @@
 package com.ikubinfo.project.restaurantapp.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ikubinfo.project.restaurantapp.domain.entity.Payment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,13 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DishIngredientDTO {
-    private Long id;
-//    @JsonIgnore
-//    private String name;
-//    @JsonIgnore
-//    private String measurement;
+public class CheckOutDTO {
 
-    private ProductDTO product;
-    private Double measure;
+    private Long id;
+    private String paymentMethod;
+
 }

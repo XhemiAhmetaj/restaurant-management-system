@@ -21,6 +21,5 @@ public class DishDTO {
     private String description;
     @NotNull(message = "Price is required")
     private double price;
-//    @JsonIgnore
-//    private List<DishIngredientDTO> dishIngredients;
+    private List<DishIngredientDTO> dishIngredients;
 }

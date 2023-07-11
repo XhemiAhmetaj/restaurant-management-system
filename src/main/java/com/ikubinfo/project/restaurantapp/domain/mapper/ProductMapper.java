@@ -29,8 +29,14 @@ public class ProductMapper {
 
     public static Product updateProduct(Product product, ProductUpdatedDTO updatedDto){
         product.setQuantity(updatedDto.getQuantity());
-        product.setModifiedAt(LocalDateTime.now());
         return product;
+    }
+
+    public static ProductUpdatedDTO toUpdateDto(Product p){
+        return ProductUpdatedDTO.builder()
+                .id(p.getId())
+                .quantity(p.getQuantity())
+                .build();
     }
 
 }

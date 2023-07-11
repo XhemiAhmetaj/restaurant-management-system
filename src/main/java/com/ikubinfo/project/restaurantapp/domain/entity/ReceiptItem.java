@@ -8,18 +8,20 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "restaurant")
+@Table(name = "receipt_item")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class Restaurant {
+public class ReceiptItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
-    private String name;
-    private String nipt;
-    private String address;
+    private String dishName;
+    private Double dishPrice;
 
+    @ManyToOne
+    @JoinColumn(name = "receipt_id", referencedColumnName = "id")
+    private Receipt receipt;
 }

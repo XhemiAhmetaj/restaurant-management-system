@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class DishIngredient {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
     private Measurement measurement;
@@ -26,4 +26,8 @@ public class DishIngredient {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dish_id", referencedColumnName = "id")
     private Dish dish;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
 }

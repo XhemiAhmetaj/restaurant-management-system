@@ -23,6 +23,8 @@ public abstract class Auditable<T>{
     protected Date createdDate;
 
     @LastModifiedBy
+    @ManyToOne
+    @JoinColumn(name = "modified_by", referencedColumnName = "id")
     protected T lastModifiedBy;
 
     @Temporal(TemporalType.TIMESTAMP)

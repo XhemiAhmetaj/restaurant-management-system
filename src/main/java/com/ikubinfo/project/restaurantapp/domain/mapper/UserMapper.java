@@ -5,8 +5,6 @@ import com.ikubinfo.project.restaurantapp.domain.dto.UserDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.update.UserUpdatedDTO;
 import com.ikubinfo.project.restaurantapp.domain.entity.User;
 
-import java.time.LocalDateTime;
-
 public class UserMapper {
 
     public static UserDTO toDto(User u){
@@ -18,7 +16,6 @@ public class UserMapper {
                 .address(u.getAddress())
                 .phoneNumber(u.getPhoneNumber())
                 .email(u.getEmail())
-                .password(u.getPassword())
                 .build();
     }
 
@@ -31,8 +28,6 @@ public class UserMapper {
                 .phoneNumber(u.getPhoneNumber())
                 .email(u.getEmail())
                 .password(u.getPassword())
-                .created_at(LocalDateTime.now())
-                .modified_at(LocalDateTime.now())
                 .build();
     }
 
@@ -49,7 +44,6 @@ public class UserMapper {
         u.setAddress(req.getAddress());
         u.setPassword(req.getPassword());
         u.setPhoneNumber(req.getPhoneNumber());
-        u.setModified_at(LocalDateTime.now());
         return u;
     }
 }

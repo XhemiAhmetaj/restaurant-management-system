@@ -1,22 +1,19 @@
 package com.ikubinfo.project.restaurantapp.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DishIngredientDTO {
+public class CategoryDTO {
     private Long id;
-//    @JsonIgnore
-//    private String name;
-//    @JsonIgnore
-//    private String measurement;
-
-    private ProductDTO product;
-    private Double measure;
+    private String name;
+    private CategoryDTO categoryParent;
+    private List<DishDTO> dishes;
 }

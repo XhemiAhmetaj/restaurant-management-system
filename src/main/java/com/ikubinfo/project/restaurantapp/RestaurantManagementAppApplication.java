@@ -9,23 +9,21 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.security.oauth2.jwt.Jwt;
 
-import javax.swing.text.html.parser.Entity;
 
 @SpringBootApplication
 @EnableJpaAuditing
 public class RestaurantManagementAppApplication {
-	@Autowired
-	private UserRepository userRepository;
+//	@Autowired
+//	private UserRepository userRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(RestaurantManagementAppApplication.class, args);
 	}
 
-	@Bean
-	public AuditorAware<User> auditorAware() {
-		return new SpringSecurityAuditorAware(userRepository);
-	}
+//	@Bean
+//	public AuditorAware<User> auditorAware() {
+//		return new SpringSecurityAuditorAware(userRepository);
+//	}
 
 }

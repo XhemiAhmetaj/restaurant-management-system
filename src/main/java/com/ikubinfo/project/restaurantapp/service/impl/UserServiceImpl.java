@@ -87,6 +87,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserUpdatedDTO updateUser(Long id, UserUpdatedDTO req) {
         User u = findById(id);
         u = UserMapper.buildUpdateUser(u,req);
+        u.setPassword(passwordEncoder.encode(req.getPassword()));
         return UserMapper.toUpdateDto(userRepository.save(u));
     }
 

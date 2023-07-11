@@ -1,14 +1,13 @@
 package com.ikubinfo.project.restaurantapp.domain.entity;
 
+import com.ikubinfo.project.restaurantapp.domain.Auditable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -17,10 +16,10 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
-public class Dish {
+public class Dish extends Auditable<User> {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue()
     private Long id;
     private String name;
     private String description;
@@ -31,9 +30,8 @@ public class Dish {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-
-    @CreatedDate
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    @ManyToOne
+    @JoinColumn(name = "menu_id", referencedColumnName = "id")
+    private Menu menu;
 
 }

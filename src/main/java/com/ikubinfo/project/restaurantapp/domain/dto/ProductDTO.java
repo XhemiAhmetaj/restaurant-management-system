@@ -3,7 +3,6 @@ package com.ikubinfo.project.restaurantapp.domain.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor

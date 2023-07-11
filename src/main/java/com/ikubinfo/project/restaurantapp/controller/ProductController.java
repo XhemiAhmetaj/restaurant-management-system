@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -17,11 +17,12 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @RolesAllowed("COOKER")
     @PostMapping("/add")
     public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO dto){
         return ResponseEntity.ok(productService.addProduct(dto));
     }
-
+    @RolesAllowed({"ADMIN","COOKER"})
     @GetMapping
     public ResponseEntity<List<ProductDTO>> listProducts(){
         return ResponseEntity.ok(productService.listAllProducts());

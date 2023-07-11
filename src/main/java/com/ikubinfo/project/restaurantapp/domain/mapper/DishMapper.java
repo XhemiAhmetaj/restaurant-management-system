@@ -1,15 +1,14 @@
 package com.ikubinfo.project.restaurantapp.domain.mapper;
 
+import com.ikubinfo.project.restaurantapp.domain.dto.CategoryDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.DishDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.DishIngredientDTO;
-import com.ikubinfo.project.restaurantapp.domain.dto.ProductDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.update.DishUpdatedDTO;
+import com.ikubinfo.project.restaurantapp.domain.entity.Category;
 import com.ikubinfo.project.restaurantapp.domain.entity.Dish;
 import com.ikubinfo.project.restaurantapp.domain.entity.DishIngredient;
 import com.ikubinfo.project.restaurantapp.domain.entity.Product;
-import com.ikubinfo.project.restaurantapp.domain.entity.enums.Measurement;
 
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 public class DishMapper {
@@ -20,17 +19,17 @@ public class DishMapper {
                 .name(dish.getName())
                 .description(dish.getDescription())
                 .price(dish.getPrice())
-//                .dishIngredients(dish.getIngredients()!=null?dish.getIngredients().stream()
-//                        .map(d->toDto(d)).collect(Collectors.toList()):null)
+                .dishIngredients(dish.getIngredients()!=null?dish.getIngredients().stream()
+                        .map(DishMapper::toDto).collect(Collectors.toList()):null)
                 .build();
     }
 
-    public static Dish toEntity(DishDTO dto){
+    public static Dish toEntity(Category category, DishDTO dto){
         return Dish.builder()
                 .name(dto.getName())
+                .category(category)
                 .description(dto.getDescription())
                 .price(dto.getPrice())
-                .createdAt(LocalDateTime.now())
                 .build();
     }
 
@@ -50,26 +49,36 @@ public class DishMapper {
     public static DishIngredientDTO toDto(DishIngredient dishIngredient){
         return DishIngredientDTO.builder()
                 .id(dishIngredient.getId())
-                .measurement(dishIngredient.getMeasurement().getValue())
+                .product(ProductMapper.toDto(dishIngredient.getProduct()))
                 .measure(dishIngredient.getMeasure())
                 .build();
     }
 
-//    public static ProductDTO toDto(Product product){
-//        return ProductDTO.builder()
-//                .id(product.getId())
-//                .name(product.getName())
-//                .measurement(product.getMeasurement().getValue())
-//                .quantity(product.getQuantity())
-//                .build();
-//    }
-//
-//    public static Product toEntity(ProductDTO dto){
-//        return Product.builder()
-//                .name(dto.getName())
-//                .measurement(Measurement.fromValue(dto.getMeasurement()))
-//                .quantity(dto.getQuantity())
-//                .build();
-//    }
+    public static DishIngredient toEntity(Dish dish, DishIngredientDTO ingredientDTO, Product product){
+        return DishIngredient.builder()
+                .id(ingredientDTO.getId())
+                .dish(dish)
+                .product(product)
+                .measure(ingredientDTO.getMeasure())
+                .build();
+    }
+
+    public static CategoryDTO toDto(Category category){
+        return CategoryDTO.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .categoryParent(category.getCategoryParent()!=null?DishMapper.toDto(category.getCategoryParent()):null)
+                .dishes(category.getDishes()!=null?category.getDishes().stream().map(DishMapper::toDto).collect(Collectors.toList()) : null)
+                .build();
+    }
+
+    public static Category toEntity(CategoryDTO dto){
+        return Category.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+//                .dishes()
+                .build();
+    }
+
 
 }

@@ -1,15 +1,14 @@
 package com.ikubinfo.project.restaurantapp.domain.entity;
 
+import com.ikubinfo.project.restaurantapp.domain.Auditable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.List;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -18,20 +17,20 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
-public class Category {
+public class Category extends Auditable<User> {
 
     @Id
-    @GeneratedValue
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
-//    @ManyToOne
-//    @JoinColumn(name = "parent_id",referencedColumnName = "id")
-//    private Category parent;
-//    @OneToMany(mappedBy = "parent",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-//    List<Category> subCategories;
-//    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-//    private List<Dish> dishes;
-    @CreatedDate
-    private LocalDateTime createdAt;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_id",referencedColumnName = "id")
+    private Category categoryParent;
+
+    @OneToMany(mappedBy = "categoryParent",cascade = CascadeType.ALL)
+    private List<Category> subCategories;
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Dish> dishes;
 
 }
