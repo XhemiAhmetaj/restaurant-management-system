@@ -3,17 +3,11 @@ package com.ikubinfo.project.restaurantapp.service.impl;
 import com.ikubinfo.project.restaurantapp.domain.dto.AddItemDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.CheckOutDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.OrderDTO;
-import com.ikubinfo.project.restaurantapp.domain.entity.Order;
-import com.ikubinfo.project.restaurantapp.domain.entity.OrderItem;
-import com.ikubinfo.project.restaurantapp.domain.entity.Payment;
-import com.ikubinfo.project.restaurantapp.domain.entity.User;
+import com.ikubinfo.project.restaurantapp.domain.entity.*;
 import com.ikubinfo.project.restaurantapp.domain.entity.enums.OrderStatus;
 import com.ikubinfo.project.restaurantapp.domain.exception.ResourceNotFoundException;
 import com.ikubinfo.project.restaurantapp.domain.mapper.OrderMapper;
-import com.ikubinfo.project.restaurantapp.repository.DishRepository;
-import com.ikubinfo.project.restaurantapp.repository.OrderItemRepository;
-import com.ikubinfo.project.restaurantapp.repository.OrderRepository;
-import com.ikubinfo.project.restaurantapp.repository.UserRepository;
+import com.ikubinfo.project.restaurantapp.repository.*;
 import com.ikubinfo.project.restaurantapp.service.OrderService;
 import com.ikubinfo.project.restaurantapp.service.PaymentService;
 import com.ikubinfo.project.restaurantapp.service.UserService;
@@ -37,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final DishRepository dishRepository;
+    private final ProductRepository productRepository;
     private final UserService userService;
     private final PaymentService paymentService;
 
@@ -116,12 +111,10 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO placeOrder(Long orderId, CheckOutDTO checkOutDTO) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException(String.format("Order with id %s not found!", orderId)));
         order.setTotalAmount(order.getOrderItems().stream().map(o -> o.getQuantity() * o.getPrice()).mapToDouble(Double::doubleValue).sum());
-        log.info("OrderItems {}",order.getOrderItems().size());
-        log.info("OrderItems.getTotalAmount() {} ",order.getTotalAmount());
         Payment payment = paymentService.addPayment(checkOutDTO.getPaymentMethod(), order.getTotalAmount());
-        log.info("Payement {}",payment.getId());
         order.setPayment(payment);
         order.setStatus(OrderStatus.CONFIRMED);
+
         return toDto(orderRepository.save(order));
     }
 
@@ -134,4 +127,9 @@ public class OrderServiceImpl implements OrderService {
                 }).orElseThrow(() -> new ResourceNotFoundException("order not found"));
         return null;
     }
+
+//    public Void updateProducts(List<OrderItem> items){
+//
+//    }
+
 }
