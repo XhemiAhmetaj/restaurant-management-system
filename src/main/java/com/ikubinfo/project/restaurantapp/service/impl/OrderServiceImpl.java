@@ -3,13 +3,11 @@ package com.ikubinfo.project.restaurantapp.service.impl;
 import com.ikubinfo.project.restaurantapp.domain.dto.AddItemDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.CheckOutDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.OrderDTO;
-import com.ikubinfo.project.restaurantapp.domain.dto.OrderItemDTO;
 import com.ikubinfo.project.restaurantapp.domain.entity.Order;
 import com.ikubinfo.project.restaurantapp.domain.entity.OrderItem;
 import com.ikubinfo.project.restaurantapp.domain.entity.Payment;
 import com.ikubinfo.project.restaurantapp.domain.entity.User;
 import com.ikubinfo.project.restaurantapp.domain.entity.enums.OrderStatus;
-import com.ikubinfo.project.restaurantapp.domain.entity.enums.PaymentMethod;
 import com.ikubinfo.project.restaurantapp.domain.exception.ResourceNotFoundException;
 import com.ikubinfo.project.restaurantapp.domain.mapper.OrderMapper;
 import com.ikubinfo.project.restaurantapp.repository.DishRepository;
@@ -22,20 +20,13 @@ import com.ikubinfo.project.restaurantapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.FlushModeType;
-import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.ikubinfo.project.restaurantapp.configuration.SecurityConfig.getJwt;
 import static com.ikubinfo.project.restaurantapp.domain.mapper.OrderMapper.toDto;
 
 @Service
@@ -66,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
             if (orderFromUser.isEmpty()) {
                 Order order = new Order();
                 order.setStatus(OrderStatus.CREATED);
-                order.setUser((User) principal);
+                order.setUser(u.get());
                 order = orderRepository.save(order);
                 addItem = buildItem(order, itemDTO);
                 order.getOrderItems().add(addItem);
@@ -83,11 +74,12 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-//    @Override
-//    public OrderDTO removeItem(Long itemId) {
-//        orderItemRepository.deleteById(itemId);
-//        return
-//    }
+    @Override
+    public Void removeItem(Long orderId, Long itemId) {
+        orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("order not found"));
+        orderItemRepository.deleteById(itemId);
+        return null;
+    }
 
     private OrderItem buildItem(Order order, AddItemDTO itemDTO) {
         OrderItem item = new OrderItem();
@@ -120,8 +112,6 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findOrdersByStatus(OrderStatus.fromValue(orderStatus)).stream().map(OrderMapper::toDto).collect(Collectors.toList());
     }
 
-    @PersistenceContext
-    private EntityManager entityManager;
     @Override
     public OrderDTO placeOrder(Long orderId, CheckOutDTO checkOutDTO) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException(String.format("Order with id %s not found!", orderId)));

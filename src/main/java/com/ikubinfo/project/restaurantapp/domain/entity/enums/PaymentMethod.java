@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 public enum PaymentMethod {
 
+    CASH("CASH"),
     MASTERCARD("MASTERCARD"),
     VISA("VISA"),
     PAYPAL("PAYPAL");

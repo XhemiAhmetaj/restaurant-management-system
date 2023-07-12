@@ -13,7 +13,7 @@ public interface OrderService {
 
     OrderDTO addItemToOrder(AddItemDTO itemDTO);
 
-//    OrderDTO removeItem(Long itemId);
+    Void removeItem(Long orderId, Long itemId);
     OrderDTO getOrder(Long id);
     List<OrderDTO> getAllUserOrders(Long user_id);
     List<OrderDTO> getAllOrders();
