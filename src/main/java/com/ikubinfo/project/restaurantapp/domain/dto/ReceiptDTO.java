@@ -17,6 +17,5 @@ public class ReceiptDTO {
     private String restaurantName;
     private String restaurantNipt;
     private String restaurantAddress;
-    private List<ReceiptItemDTO> items;
     private Double total;
 }

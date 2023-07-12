@@ -18,12 +18,9 @@ import java.util.List;
 public class Receipt {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double total;
-
-    @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL)
-    private List<ReceiptItem> receiptItems;
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id", referencedColumnName = "id")

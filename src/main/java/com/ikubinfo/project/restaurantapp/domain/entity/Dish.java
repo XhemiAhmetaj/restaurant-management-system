@@ -19,7 +19,7 @@ import java.util.List;
 public class Dish extends Auditable<User> {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;

@@ -17,7 +17,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @RolesAllowed("COOKER")
+    @RolesAllowed({"ADMIN","COOKER"})
     @PostMapping("/add")
     public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO dto){
         return ResponseEntity.ok(productService.addProduct(dto));

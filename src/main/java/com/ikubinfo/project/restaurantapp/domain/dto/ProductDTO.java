@@ -13,6 +13,6 @@ public class ProductDTO {
     private Long id;
     private String name;
     private String measurement;
-    private Integer quantity;
+    private Double quantity;
 
 }

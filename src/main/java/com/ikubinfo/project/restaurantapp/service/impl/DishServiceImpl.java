@@ -45,9 +45,16 @@ public class DishServiceImpl implements DishService {
         return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
     }
 
+//    @Override
+//    public CategoryDTO addCategory(CategoryDTO categoryDTO) {
+//        Category cat = DishMapper.toEntity(categoryDTO);
+//        return toDto(categoryRepository.save(cat));
+//    }
+
     @Override
-    public CategoryDTO addCategory(CategoryDTO categoryDTO) {
+    public CategoryDTO addCategory(Long catId, CategoryDTO categoryDTO) {
         Category cat = DishMapper.toEntity(categoryDTO);
+        cat.setCategoryParent(categoryRepository.findById(catId).orElseThrow(()-> new ResourceNotFoundException("Category not found!")));
         return toDto(categoryRepository.save(cat));
     }
 

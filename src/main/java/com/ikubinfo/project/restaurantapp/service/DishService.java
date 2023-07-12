@@ -14,7 +14,8 @@ import java.util.List;
 public interface DishService {
 
     Category findCategoryById(Long id);
-    CategoryDTO addCategory(CategoryDTO categoryDTO);
+//    CategoryDTO addCategory(CategoryDTO categoryDTO);
+    CategoryDTO addCategory(Long id, CategoryDTO categoryDTO);
     List<CategoryDTO> listCategories();
     Void deleteCategory(Long id);
 

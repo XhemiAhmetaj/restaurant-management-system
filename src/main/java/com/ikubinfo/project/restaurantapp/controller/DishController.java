@@ -23,7 +23,7 @@ public class DishController {
 
     private final DishService dishService;
 
-    @RolesAllowed("COOKER")
+    @RolesAllowed({"ADMIN","COOKER"})
     @PostMapping("/category/{categoryId}/add")
     public ResponseEntity<DishDTO> registerDish(@RequestBody @Valid DishDTO req, @PathVariable Long categoryId) {
         DishDTO dto = dishService.addDish(categoryId,req);
@@ -40,19 +40,19 @@ public class DishController {
         return ResponseEntity.ok(dishDTO);
     }
 
-    @RolesAllowed("COOKER")
+    @RolesAllowed({"ADMIN","COOKER"})
     @PutMapping("/{id}")
     public ResponseEntity<DishUpdatedDTO> updateDish(@PathVariable Long id, @RequestBody DishUpdatedDTO dto){
         return ResponseEntity.ok(dishService.updateDish(id,dto));
     }
 
-    @RolesAllowed("COOKER")
+    @RolesAllowed({"ADMIN","COOKER"})
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDish(@PathVariable Long id){
         return ResponseEntity.ok(dishService.deleteDish(id));
     }
 
-    @RolesAllowed("COOKER")
+    @RolesAllowed({"ADMIN","COOKER"})
     @PostMapping("/{dishId}/ingredient/{productId}")
     public ResponseEntity<DishIngredientDTO> addIngredient(@PathVariable Long dishId, @RequestBody DishIngredientDTO ingredientDTO, @PathVariable Long productId){
         return ResponseEntity.ok(dishService.addIngredient(dishId,ingredientDTO, productId));
@@ -64,8 +64,12 @@ public class DishController {
     }
 
     @PostMapping("/categories")
-    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO){
-        return ResponseEntity.ok(dishService.addCategory(categoryDTO));
+    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO, Integer id){
+        return ResponseEntity.ok(dishService.addCategory(null, categoryDTO));
+    }
+    @PostMapping("{categoryId}/categories")
+    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable Long categoryId){
+        return ResponseEntity.ok(dishService.addCategory(categoryId, categoryDTO));
     }
 
     @GetMapping("/list/categories")

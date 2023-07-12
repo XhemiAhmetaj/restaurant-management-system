@@ -16,5 +16,5 @@ public class OrderDTO {
     private List<OrderItemDTO> orderItems;
     private Double totalAmount;
     private String orderStatus;
-    private UserDTO userDTO;
+    private Long userId;
 }

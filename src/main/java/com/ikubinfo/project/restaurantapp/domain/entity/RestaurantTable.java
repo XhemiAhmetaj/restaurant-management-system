@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Builder
 public class RestaurantTable extends Auditable<User> {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer tableId;
     private Integer capacity;

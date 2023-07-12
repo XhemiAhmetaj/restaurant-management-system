@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class ProductUpdatedDTO {
 
     private Long id;
-    private Integer quantity;
+    private Double quantity;
 }

@@ -27,7 +27,7 @@ public class Product extends Auditable<User> {
     private String name;
     @Enumerated(EnumType.STRING)
     private Measurement measurement;
-    private Integer quantity;
+    private Double quantity;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<DishIngredient> dishIngredients;

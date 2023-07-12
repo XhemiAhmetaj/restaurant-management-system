@@ -22,7 +22,7 @@ import java.util.List;
 public class Order extends Auditable<User> {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double totalAmount;
 
