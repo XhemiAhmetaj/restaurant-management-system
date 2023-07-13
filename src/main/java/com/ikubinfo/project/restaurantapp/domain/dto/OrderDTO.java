@@ -20,5 +20,7 @@ public class OrderDTO {
     private Long userId;
     private Long tableId;
     @JsonIgnore
+    private Integer points;
+    @JsonIgnore
     private Long receiptId;
 }

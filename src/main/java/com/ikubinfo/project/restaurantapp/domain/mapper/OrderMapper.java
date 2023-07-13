@@ -17,7 +17,6 @@ public class OrderMapper {
                 .orderStatus(order.getStatus().getValue())
                 .userId(order.getUser().getId())
                 .tableId(order.getTable().getTableId())
-//                .receiptId(order.getReceipt().getId()!=null?order.getReceipt().getId():null)
                 .build();
     }
 

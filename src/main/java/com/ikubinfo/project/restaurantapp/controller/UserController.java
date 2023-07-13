@@ -59,9 +59,5 @@ public class UserController {
         return ResponseEntity.ok(u);
     }
 
-    @GetMapping("/{userId}/points")
-    public ResponseEntity<Integer> getPoints(@PathVariable Long userId){
-        return ResponseEntity.ok(userService.getUserPoints(userId));
-    }
 
 }

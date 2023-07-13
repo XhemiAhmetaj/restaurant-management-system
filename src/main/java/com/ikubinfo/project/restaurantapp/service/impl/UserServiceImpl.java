@@ -11,6 +11,7 @@ import com.ikubinfo.project.restaurantapp.repository.OrderRepository;
 import com.ikubinfo.project.restaurantapp.repository.UserRepository;
 import com.ikubinfo.project.restaurantapp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,6 +26,7 @@ import static java.lang.String.format;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -95,13 +97,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return UserMapper.toUpdateDto(userRepository.save(u));
     }
 
-    @Override
-    public Integer getUserPoints(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("User not found!"));
-        user.setTotalPoints(user.getOrders().stream().map(o-> o.getReceipt().getPoints()).mapToInt(Integer::intValue).sum());
-        userRepository.save(user);
-        return user.getTotalPoints();
-    }
 
 
 }

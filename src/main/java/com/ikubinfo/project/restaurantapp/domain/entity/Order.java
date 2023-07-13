@@ -25,6 +25,7 @@ public class Order extends Auditable<User> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double totalAmount;
+    private Integer points;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;

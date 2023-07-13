@@ -1,13 +1,11 @@
 package com.ikubinfo.project.restaurantapp;
 
-import com.ikubinfo.project.restaurantapp.configuration.SpringSecurityAuditorAware;
-import com.ikubinfo.project.restaurantapp.domain.entity.User;
-import com.ikubinfo.project.restaurantapp.repository.UserRepository;
+import com.ikubinfo.project.restaurantapp.service.EmailServiceSenderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.AuditorAware;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 
@@ -15,15 +13,14 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableJpaAuditing
 public class RestaurantManagementAppApplication {
 //	@Autowired
-//	private UserRepository userRepository;
+//	private EmailServiceSenderImpl emailServiceSender;
 
 	public static void main(String[] args) {
 		SpringApplication.run(RestaurantManagementAppApplication.class, args);
 	}
 
-//	@Bean
-//	public AuditorAware<User> auditorAware() {
-//		return new SpringSecurityAuditorAware(userRepository);
+//	@EventListener(ApplicationReadyEvent.class)
+//	public void sendEmail(){
+//		emailServiceSender.sendEmail("xh.ahmetaj22@gmail.com", "Test", "Hello!");
 //	}
-
 }

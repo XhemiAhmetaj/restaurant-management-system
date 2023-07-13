@@ -9,6 +9,7 @@ import com.ikubinfo.project.restaurantapp.domain.entity.enums.OrderStatus;
 import com.ikubinfo.project.restaurantapp.domain.exception.ResourceNotFoundException;
 import com.ikubinfo.project.restaurantapp.domain.mapper.OrderMapper;
 import com.ikubinfo.project.restaurantapp.domain.mapper.ReceiptMapper;
+import com.ikubinfo.project.restaurantapp.domain.mapper.UserMapper;
 import com.ikubinfo.project.restaurantapp.repository.*;
 import com.ikubinfo.project.restaurantapp.service.OrderService;
 import com.ikubinfo.project.restaurantapp.service.PaymentService;
@@ -139,16 +140,27 @@ public class OrderServiceImpl implements OrderService {
             order.setPayment(payment);
             order.setStatus(OrderStatus.CONFIRMED);
             orderRepository.save(order);
+            setOrderPoints(orderId);
+            setUserPoints(orderId);
             updateProducts(order.getId());
+
             Receipt receipt= ReceiptMapper.toCreate(order);
             receiptRepository.save(receipt);
             order.setReceipt(receipt);
+
             orderRepository.save(order);
             return ReceiptMapper.toDto(receipt);
         }else{
             throw new ResourceNotFoundException("Order is placed before.");
         }
 
+    }
+
+    private void setUserPoints(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow();
+        User user = order.getUser();
+        user.setTotalPoints(user.getTotalPoints() + order.getPoints());
+        UserMapper.toDto(userRepository.save(user));
     }
 
     @Override
@@ -161,19 +173,36 @@ public class OrderServiceImpl implements OrderService {
         return null;
     }
 
-    public Void updateProducts(Long orderId){
+    public void updateProducts(Long orderId){
         Order order = orderRepository.findById(orderId).orElseThrow();
         order.getOrderItems().stream()
-                .map(orderItem->orderItem.getDish().getIngredients().stream()
-                        .peek(dishIngredient ->{
-                    dishIngredient.getProduct().setQuantity(dishIngredient.getProduct().getQuantity() - (dishIngredient.getMeasure() * orderItem.getQuantity()));
-                    productRepository.save(dishIngredient.getProduct());
-                    dishIngredientRepository.save(dishIngredient);
+                .flatMap(orderItem->
+                        orderItem.getDish().getIngredients().stream()
+                        .map(dishIngredient ->{
+                            Product product = dishIngredient.getProduct();
+                            log.info("-------------------------dishIngredient.getMeasure()------------ "+dishIngredient.getMeasure());
+                            log.info("-----------------orderItem.getQuantity()-------------" + orderItem.getQuantity());
+                            log.info("------------------before----------------------" +product.getQuantity());
+                            product.setQuantity(product.getQuantity() - (dishIngredient.getMeasure() * orderItem.getQuantity()));
+                            log.info("------------------after----------------------" +product.getQuantity());
 
+                    productRepository.save(product);
+                        return null;
                         })).collect(Collectors.toList());
 
-        return null;
+    }
 
+    public Integer setOrderPoints(Long orderId){
+        Order order = orderRepository.findById(orderId).orElseThrow();
+        if(order.getUser().isEnabled()){
+            order.setPoints((int) (order.getTotalAmount()*0.005));
+            orderRepository.save(order);
+            return order.getPoints();
+        }else {
+            order.setPoints(0);
+            orderRepository.save(order);
+            return order.getPoints();
+        }
     }
 
 }

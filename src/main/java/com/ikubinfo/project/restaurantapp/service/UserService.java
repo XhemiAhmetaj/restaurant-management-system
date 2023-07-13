@@ -17,6 +17,4 @@ public interface UserService {
     List<UserDTO> findUserByRole(String role);
     UserUpdatedDTO updateUser(Long id, UserUpdatedDTO u);
 
-    Integer getUserPoints(Long userId);
-
 }

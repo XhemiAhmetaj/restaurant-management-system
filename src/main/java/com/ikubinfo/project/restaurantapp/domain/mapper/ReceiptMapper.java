@@ -25,7 +25,7 @@ public class ReceiptMapper {
 //        receipt.setRestaurant(restaurant);
         receipt.setOrder(order);
         receipt.setTotal(order.getTotalAmount());
-        receipt.setPoints((int) (order.getTotalAmount()*0.005));
+        receipt.setPoints(order.getPoints());
         return receipt;
     }
 
