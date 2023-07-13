@@ -16,6 +16,7 @@ public class UserMapper {
                 .address(u.getAddress())
                 .phoneNumber(u.getPhoneNumber())
                 .email(u.getEmail())
+                .totalPoints(u.getTotalPoints())
                 .build();
     }
 

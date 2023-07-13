@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class RestaurantTableDTO {
 
     private Long id;
-    private Integer tableId;
+    private Long tableId;
     private Integer capacity;
     private String description;
     private String status;

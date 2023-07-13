@@ -15,7 +15,8 @@ public interface UserService {
     void deleteUser(Long id);
     User getUserFromToken(Jwt jwt);
     List<UserDTO> findUserByRole(String role);
-
     UserUpdatedDTO updateUser(Long id, UserUpdatedDTO u);
+
+    Integer getUserPoints(Long userId);
 
 }

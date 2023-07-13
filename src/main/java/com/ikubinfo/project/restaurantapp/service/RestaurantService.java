@@ -2,6 +2,7 @@ package com.ikubinfo.project.restaurantapp.service;
 
 import com.ikubinfo.project.restaurantapp.domain.dto.MenuDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.RestaurantTableDTO;
+import com.ikubinfo.project.restaurantapp.domain.entity.Restaurant;
 
 import java.util.List;
 

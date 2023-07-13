@@ -2,10 +2,12 @@ package com.ikubinfo.project.restaurantapp.service.impl;
 
 import com.ikubinfo.project.restaurantapp.domain.dto.UserDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.update.UserUpdatedDTO;
+import com.ikubinfo.project.restaurantapp.domain.entity.Order;
 import com.ikubinfo.project.restaurantapp.domain.entity.User;
 import com.ikubinfo.project.restaurantapp.domain.entity.enums.UserRole;
 import com.ikubinfo.project.restaurantapp.domain.exception.ResourceNotFoundException;
 import com.ikubinfo.project.restaurantapp.domain.mapper.UserMapper;
+import com.ikubinfo.project.restaurantapp.repository.OrderRepository;
 import com.ikubinfo.project.restaurantapp.repository.UserRepository;
 import com.ikubinfo.project.restaurantapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import static java.lang.String.format;
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final OrderRepository orderRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -56,6 +59,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User u = UserMapper.toEntity(req);
         u.setRole(userRole!=null? UserRole.fromValue(userRole): UserRole.CUSTOMER);
         u.setPassword(passwordEncoder.encode(req.getPassword()));
+        u.setTotalPoints(0);
         u = userRepository.save(u);
 
         return UserMapper.toDto(u);
@@ -89,6 +93,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         u = UserMapper.buildUpdateUser(u,req);
         u.setPassword(passwordEncoder.encode(req.getPassword()));
         return UserMapper.toUpdateDto(userRepository.save(u));
+    }
+
+    @Override
+    public Integer getUserPoints(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("User not found!"));
+        user.setTotalPoints(user.getOrders().stream().map(o-> o.getReceipt().getPoints()).mapToInt(Integer::intValue).sum());
+        userRepository.save(user);
+        return user.getTotalPoints();
     }
 
 

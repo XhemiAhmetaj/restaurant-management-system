@@ -2,6 +2,7 @@ package com.ikubinfo.project.restaurantapp.domain.dto;
 //
 //import jakarta.validation.constraints.Email;
 //import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,4 +31,7 @@ public class UserDTO {
     @NotNull(message = "Phone Number is required")
     private String phoneNumber;
     private LocalDate birthday;
+
+    @JsonIgnore
+    private Integer totalPoints;
 }

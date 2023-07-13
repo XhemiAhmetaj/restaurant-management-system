@@ -1,17 +1,12 @@
 package com.ikubinfo.project.restaurantapp.service;
 
-import com.ikubinfo.project.restaurantapp.domain.dto.AddItemDTO;
-import com.ikubinfo.project.restaurantapp.domain.dto.CheckOutDTO;
-import com.ikubinfo.project.restaurantapp.domain.dto.OrderDTO;
-import com.ikubinfo.project.restaurantapp.domain.dto.OrderItemDTO;
-import com.ikubinfo.project.restaurantapp.domain.entity.Order;
-import com.ikubinfo.project.restaurantapp.domain.entity.OrderItem;
+import com.ikubinfo.project.restaurantapp.domain.dto.*;
 
 import java.util.List;
 
 public interface OrderService {
 
-    OrderDTO addItemToOrder(AddItemDTO itemDTO);
+    OrderDTO addItemToOrder(Long tableId, AddItemDTO itemDTO);
 
     Void removeItem(Long orderId, Long itemId);
     OrderDTO getOrder(Long id);
@@ -19,7 +14,7 @@ public interface OrderService {
     List<OrderDTO> getAllOrders();
     List<OrderDTO> getOrdersByStatus(String orderStatus);
 
-    OrderDTO placeOrder(Long orderId, CheckOutDTO checkOutDTO);
+    ReceiptDTO placeOrder(Long orderId, CheckOutDTO checkOutDTO);
 
     Void changeStatus(Long orderId, String status);
 }

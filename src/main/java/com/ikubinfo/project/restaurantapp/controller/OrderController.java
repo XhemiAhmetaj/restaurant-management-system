@@ -3,6 +3,7 @@ package com.ikubinfo.project.restaurantapp.controller;
 import com.ikubinfo.project.restaurantapp.domain.dto.AddItemDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.CheckOutDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.OrderDTO;
+import com.ikubinfo.project.restaurantapp.domain.dto.ReceiptDTO;
 import com.ikubinfo.project.restaurantapp.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
+
     @GetMapping
     public ResponseEntity<List<OrderDTO>> listOrders(){
         return ResponseEntity.ok(orderService.getAllOrders());
@@ -27,9 +29,9 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrder(orderId));
     }
 
-    @PostMapping
-    public ResponseEntity<OrderDTO> addItem(@RequestBody AddItemDTO itemDTO){
-        return ResponseEntity.ok(orderService.addItemToOrder(itemDTO));
+    @PostMapping("/{tableId}")
+    public ResponseEntity<OrderDTO> addItem(@PathVariable Long tableId, @RequestBody AddItemDTO itemDTO){
+        return ResponseEntity.ok(orderService.addItemToOrder(tableId, itemDTO));
     }
 
     @GetMapping("/status/{status}")
@@ -43,7 +45,7 @@ public class OrderController {
     }
 
     @PostMapping("/{orderId}/place")
-    public ResponseEntity<OrderDTO> placeOrder(@PathVariable Long orderId, @RequestBody CheckOutDTO paymentMethod){
+    public ResponseEntity<ReceiptDTO> placeOrder(@PathVariable Long orderId, @RequestBody CheckOutDTO paymentMethod){
         return ResponseEntity.ok(orderService.placeOrder(orderId,paymentMethod));
     }
 

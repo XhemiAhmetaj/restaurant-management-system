@@ -40,4 +40,11 @@ public class Order extends Auditable<User> {
     @JoinColumn(name = "payment_id",referencedColumnName = "id")
     private Payment payment;
 
+    @ManyToOne
+    @JoinColumn(name = "table_id", referencedColumnName = "id")
+    private RestaurantTable table;
+
+    @OneToOne
+    @JoinColumn(name = "receipt_id", referencedColumnName = "id")
+    private Receipt receipt;
 }

@@ -17,5 +17,7 @@ public class ReceiptDTO {
     private String restaurantName;
     private String restaurantNipt;
     private String restaurantAddress;
+    private List<OrderItemDTO> items;
     private Double total;
+    private Integer points;
 }

@@ -10,7 +10,7 @@ import javax.persistence.*;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "order_iteams")
+@Table(name = "order_items")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

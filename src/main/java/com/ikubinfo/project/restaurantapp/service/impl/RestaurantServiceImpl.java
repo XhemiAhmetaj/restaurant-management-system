@@ -73,4 +73,6 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .map(RestaurantMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+
 }

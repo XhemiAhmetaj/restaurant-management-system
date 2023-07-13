@@ -21,6 +21,7 @@ public class Receipt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double total;
+    private Integer points;
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id", referencedColumnName = "id")

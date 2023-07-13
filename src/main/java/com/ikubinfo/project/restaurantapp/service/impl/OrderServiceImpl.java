@@ -3,10 +3,12 @@ package com.ikubinfo.project.restaurantapp.service.impl;
 import com.ikubinfo.project.restaurantapp.domain.dto.AddItemDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.CheckOutDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.OrderDTO;
+import com.ikubinfo.project.restaurantapp.domain.dto.ReceiptDTO;
 import com.ikubinfo.project.restaurantapp.domain.entity.*;
 import com.ikubinfo.project.restaurantapp.domain.entity.enums.OrderStatus;
 import com.ikubinfo.project.restaurantapp.domain.exception.ResourceNotFoundException;
 import com.ikubinfo.project.restaurantapp.domain.mapper.OrderMapper;
+import com.ikubinfo.project.restaurantapp.domain.mapper.ReceiptMapper;
 import com.ikubinfo.project.restaurantapp.repository.*;
 import com.ikubinfo.project.restaurantapp.service.OrderService;
 import com.ikubinfo.project.restaurantapp.service.PaymentService;
@@ -34,10 +36,12 @@ public class OrderServiceImpl implements OrderService {
     private final ProductRepository productRepository;
     private final DishIngredientRepository dishIngredientRepository;
     private final UserService userService;
+    private final RestaurantTableRepository tableRepository;
     private final PaymentService paymentService;
+    private final ReceiptRepository receiptRepository;
 
     @Override
-    public OrderDTO addItemToOrder(AddItemDTO itemDTO) {
+    public OrderDTO addItemToOrder(Long tableId, AddItemDTO itemDTO) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof Jwt) {
@@ -49,30 +53,34 @@ public class OrderServiceImpl implements OrderService {
                     .filter(order -> order.getStatus().equals(OrderStatus.CREATED))
                     .collect(Collectors.toList());
 
-            OrderItem addItem;
             if (orderFromUser.isEmpty()) {
-//                Order order = new Order();
-//                order.setStatus(OrderStatus.CREATED);
-//                order.setUser(u.get());
-//                order = orderRepository.save(order);
-//                addItem = buildItem(order, itemDTO);
-//                order.getOrderItems().add(addItem);
-//                order = orderRepository.save(order);
-                return toDto(addFirstItem(u, itemDTO));
+                return toDto(addFirstItem(tableId, u, itemDTO));
 
             } else {
-                addItem = buildItem(orderFromUser.get(0), itemDTO);
+                OrderItem addItem = buildItem(orderFromUser.get(0), itemDTO);
                 orderFromUser.get(0).getOrderItems().add(addItem);
                 return toDto(orderRepository.save(orderFromUser.get(0)));
             }
         } else {
-            throw new IllegalStateException("user not authenticated");
+//            throw new IllegalStateException("user not authenticated");
+            List<Order> orderFromTable = orderRepository.findOrdersByTable_TableId(tableId)
+                    .stream()
+                    .filter(order -> order.getStatus().equals(OrderStatus.CREATED))
+                    .collect(Collectors.toList());
+            if(orderFromTable.isEmpty()){
+                return toDto(addFirstItem(tableId, Optional.empty(), itemDTO));
+            } else {
+                OrderItem addItem = buildItem(orderFromTable.get(0), itemDTO);
+                orderFromTable.get(0).getOrderItems().add(addItem);
+                return toDto(orderRepository.save(orderFromTable.get(0)));
+            }
         }
     }
 
-    private Order addFirstItem(Optional<User> u, AddItemDTO item){
+    private Order addFirstItem(Long tableId, Optional<User> u, AddItemDTO item){
         OrderItem addItem;
         Order order = new Order();
+        order.setTable(tableRepository.findById(tableId).orElseThrow(()-> new ResourceNotFoundException("Table id not found!")));
         order.setStatus(OrderStatus.CREATED);
         order.setUser(u.get());
         order = orderRepository.save(order);
@@ -122,7 +130,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO placeOrder(Long orderId, CheckOutDTO checkOutDTO) {
+    public ReceiptDTO placeOrder(Long orderId, CheckOutDTO checkOutDTO) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException(String.format("Order with id %s not found!", orderId)));
         if(order.getStatus().equals(OrderStatus.CREATED))
         {
@@ -130,10 +138,15 @@ public class OrderServiceImpl implements OrderService {
             Payment payment = paymentService.addPayment(checkOutDTO.getPaymentMethod(), order.getTotalAmount());
             order.setPayment(payment);
             order.setStatus(OrderStatus.CONFIRMED);
+            orderRepository.save(order);
             updateProducts(order.getId());
-            return toDto(orderRepository.save(order));
+            Receipt receipt= ReceiptMapper.toCreate(order);
+            receiptRepository.save(receipt);
+            order.setReceipt(receipt);
+            orderRepository.save(order);
+            return ReceiptMapper.toDto(receipt);
         }else{
-            return toDto(order);
+            throw new ResourceNotFoundException("Order is placed before.");
         }
 
     }

@@ -33,6 +33,7 @@ public class User implements UserDetails {
     private String password;
     private String phoneNumber;
     private String address;
+    private Integer totalPoints;
     private LocalDate birthday;
     @Enumerated(EnumType.STRING)
     private UserRole role;

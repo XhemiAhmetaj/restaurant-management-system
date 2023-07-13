@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "tables")
@@ -19,10 +20,13 @@ public class RestaurantTable extends Auditable<User> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer tableId;
+    private Long tableId;
     private Integer capacity;
     private String description;
     @Enumerated(EnumType.STRING)
     private TableStatus tableStatus;
+
+    @OneToMany(mappedBy = "table", cascade = CascadeType.ALL)
+    private List<Order> orders;
 
 }

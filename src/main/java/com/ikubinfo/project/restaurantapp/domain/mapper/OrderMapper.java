@@ -4,9 +4,7 @@ import com.ikubinfo.project.restaurantapp.domain.dto.OrderDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.OrderItemDTO;
 import com.ikubinfo.project.restaurantapp.domain.entity.Order;
 import com.ikubinfo.project.restaurantapp.domain.entity.OrderItem;
-import com.ikubinfo.project.restaurantapp.domain.entity.User;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderMapper {
@@ -18,13 +16,14 @@ public class OrderMapper {
                 .totalAmount(order.getOrderItems().stream().map(i->(i.getDish().getPrice() * i.getQuantity())).mapToDouble(Double::doubleValue).sum())
                 .orderStatus(order.getStatus().getValue())
                 .userId(order.getUser().getId())
+                .tableId(order.getTable().getTableId())
+//                .receiptId(order.getReceipt().getId()!=null?order.getReceipt().getId():null)
                 .build();
     }
 
     public static OrderItemDTO toDto(OrderItem orderItem){
         return OrderItemDTO.builder()
                 .id(orderItem.getId())
-//                .dish(orderItem.getDish()!=null?DishMapper.toDto(orderItem.getDish()):null)
                 .dishId(orderItem.getDish().getId())
                 .dishName(orderItem.getDish().getName())
                 .dishDescription(orderItem.getDish().getDescription())
