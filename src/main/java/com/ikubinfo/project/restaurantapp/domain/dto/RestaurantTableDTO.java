@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +20,5 @@ public class RestaurantTableDTO {
     private Integer capacity;
     private String description;
     private String status;
+
 }

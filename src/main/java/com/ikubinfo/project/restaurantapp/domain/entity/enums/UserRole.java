@@ -11,6 +11,7 @@ public enum UserRole {
     ADMIN("ADMIN"),
     COOKER("COOKER"),
     WAITER("WAITER"),
+    RECEPTIONIST("RECEPTIONIST"),
     CUSTOMER("CUSTOMER");
 
     private String value;

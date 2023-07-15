@@ -13,7 +13,6 @@ public class UserMapper {
                 .name(u.getName())
                 .lastname(u.getLastname())
                 .birthday(u.getBirthday())
-                .address(u.getAddress())
                 .phoneNumber(u.getPhoneNumber())
                 .email(u.getEmail())
                 .totalPoints(u.getTotalPoints())
@@ -25,7 +24,6 @@ public class UserMapper {
                 .name(u.getName())
                 .lastname(u.getLastname())
                 .birthday(u.getBirthday())
-                .address(u.getAddress())
                 .phoneNumber(u.getPhoneNumber())
                 .email(u.getEmail())
                 .password(u.getPassword())
@@ -35,14 +33,12 @@ public class UserMapper {
     public static UserUpdatedDTO toUpdateDto(User u){
         return UserUpdatedDTO.builder()
                 .id(u.getId())
-                .address(u.getAddress())
                 .password(u.getPassword())
                 .phoneNumber(u.getPhoneNumber())
                 .build();
     }
 
     public static User buildUpdateUser(User u, UserUpdatedDTO req){
-        u.setAddress(req.getAddress());
         u.setPassword(req.getPassword());
         u.setPhoneNumber(req.getPhoneNumber());
         return u;

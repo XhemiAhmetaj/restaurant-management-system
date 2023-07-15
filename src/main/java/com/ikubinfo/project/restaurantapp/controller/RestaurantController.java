@@ -1,8 +1,11 @@
 package com.ikubinfo.project.restaurantapp.controller;
 
 import com.ikubinfo.project.restaurantapp.domain.dto.MenuDTO;
+import com.ikubinfo.project.restaurantapp.domain.dto.ReservationDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.RestaurantTableDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.update.TableUpdatedDTO;
+import com.ikubinfo.project.restaurantapp.domain.entity.Reservation;
+import com.ikubinfo.project.restaurantapp.service.ReservationService;
 import com.ikubinfo.project.restaurantapp.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,7 @@ import java.util.List;
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
+    private final ReservationService reservationService;
 
 //    @GetMapping("/menu")
 //    public ResponseEntity<List<MenuDTO>> getMenu(){
@@ -51,4 +55,25 @@ public class RestaurantController {
     public ResponseEntity<List<RestaurantTableDTO>> listTablesByCapacity(@PathVariable Integer tableCapacity){
         return ResponseEntity.ok(restaurantService.listTablesByCapacity(tableCapacity));
     }
+
+    @PostMapping("/reservation/add")
+    public ResponseEntity<ReservationDTO> addReservation(@RequestBody ReservationDTO reservationDTO){
+        return ResponseEntity.ok(reservationService.reserveTable( reservationDTO ) );
+    }
+
+    @GetMapping("/reservations")
+    public ResponseEntity<List<ReservationDTO>> listReservations(){
+        return ResponseEntity.ok(reservationService.showAllReservations());
+    }
+
+    @GetMapping("/reservations/{reservationId}")
+    public ResponseEntity<ReservationDTO> getReservationById(@PathVariable Long reservationId){
+        return ResponseEntity.ok(reservationService.findReservationById(reservationId));
+    }
+
+    @GetMapping("/reservations/user/{userId}")
+    public ResponseEntity<List<ReservationDTO>> getReservationByUserId(@PathVariable Long userId){
+        return ResponseEntity.ok(reservationService.findReservationByUserId(userId));
+    }
+
 }

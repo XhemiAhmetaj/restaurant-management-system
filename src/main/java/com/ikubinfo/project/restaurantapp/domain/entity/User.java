@@ -2,6 +2,7 @@ package com.ikubinfo.project.restaurantapp.domain.entity;
 
 import com.ikubinfo.project.restaurantapp.domain.entity.enums.UserRole;
 import lombok.*;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,6 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
+@Where(clause = "deleted = false")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,9 +34,11 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String phoneNumber;
-    private String address;
     private Integer totalPoints;
     private LocalDate birthday;
+
+    private boolean deleted=false;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 

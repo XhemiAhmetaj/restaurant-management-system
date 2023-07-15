@@ -64,7 +64,7 @@ public class DishController {
     }
 
     @PostMapping("/categories")
-    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO, Integer id){
+    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO){
         return ResponseEntity.ok(dishService.addCategory(null, categoryDTO));
     }
     @PostMapping("{categoryId}/categories")

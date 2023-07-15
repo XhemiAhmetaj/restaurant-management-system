@@ -1,11 +1,14 @@
 package com.ikubinfo.project.restaurantapp.controller;
 
+import com.ikubinfo.project.restaurantapp.domain.dto.PageParameterDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.UserDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.update.UserUpdatedDTO;
 import com.ikubinfo.project.restaurantapp.domain.entity.User;
 import com.ikubinfo.project.restaurantapp.domain.mapper.UserMapper;
+import com.ikubinfo.project.restaurantapp.repository.specification.SearchCriteria;
 import com.ikubinfo.project.restaurantapp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,5 +62,15 @@ public class UserController {
         return ResponseEntity.ok(u);
     }
 
+
+    @GetMapping("/list/{role}")
+    public ResponseEntity<Page<UserDTO>> getUsersByRole(@PathVariable String role, PageParameterDTO pageParameterDTO){
+        return ResponseEntity.ok(userService.findUserByRole(role,pageParameterDTO));
+    }
+
+    @PostMapping("/list")
+    public ResponseEntity<Page<UserDTO>> filterUsers (@RequestBody List<SearchCriteria> criteria, PageParameterDTO pageParameterDTO) {
+        return ResponseEntity.ok(userService.filterUsers(criteria,pageParameterDTO));
+    }
 
 }

@@ -19,8 +19,8 @@ public class DishIngredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Enumerated(EnumType.STRING)
-    private Measurement measurement;
+//    @Enumerated(EnumType.STRING)
+//    private Measurement measurement;
     private Double measure;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -29,4 +29,6 @@ public class RestaurantTable extends Auditable<User> {
     @OneToMany(mappedBy = "table", cascade = CascadeType.ALL)
     private List<Order> orders;
 
+    @OneToMany(mappedBy = "table", cascade = CascadeType.ALL)
+    private List<Reservation> reservations;
 }

@@ -1,8 +1,10 @@
 package com.ikubinfo.project.restaurantapp.domain.mapper;
 
 import com.ikubinfo.project.restaurantapp.domain.dto.MenuDTO;
+import com.ikubinfo.project.restaurantapp.domain.dto.ReservationDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.RestaurantTableDTO;
 import com.ikubinfo.project.restaurantapp.domain.entity.Menu;
+import com.ikubinfo.project.restaurantapp.domain.entity.Reservation;
 import com.ikubinfo.project.restaurantapp.domain.entity.RestaurantTable;
 import com.ikubinfo.project.restaurantapp.domain.entity.enums.TableStatus;
 
@@ -29,18 +31,24 @@ public class RestaurantMapper {
                 .build();
     }
 
-//    public static TableUpdatedDTO toUpdateDto(TableUpdatedDTO dto){
-//        return TableUpdatedDTO.builder()
-//                .capacity(dto.getCapacity())
-//                .status(dto.getStatus())
-//                .build();
-//    }
-//
-//    public static RestaurantTable updateTable(RestaurantTable table,TableUpdatedDTO dto){
-//        table.setCapacity(dto.getCapacity());
-//        table.setStatus(dto);
-//        return table;
-//    }
+
+    public static ReservationDTO toDto(Reservation reservation){
+        return ReservationDTO.builder()
+                .id(reservation.getId())
+                .comment(reservation.getComment())
+                .tableId(reservation.getTable().getTableId())
+                .date(reservation.getDate())
+                .time(reservation.getTime())
+                .build();
+    }
+
+    public static Reservation createReservation(Reservation reservation, ReservationDTO reservationDTO, RestaurantTable table){
+        reservation.setComment(reservationDTO.getComment());
+        reservation.setDate(reservationDTO.getDate());
+        reservation.setTime(reservationDTO.getTime());
+        reservation.setTable(table);
+        return reservation;
+    }
 
 //    public static MenuDTO toDto(Menu menu){
 //        return MenuDTO.builder()

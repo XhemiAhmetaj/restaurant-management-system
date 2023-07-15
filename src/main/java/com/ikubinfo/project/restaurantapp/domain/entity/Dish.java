@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.persistence.Table;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
+@Where(clause = "deleted = false")
 public class Dish extends Auditable<User> {
 
     @Id
@@ -24,6 +26,9 @@ public class Dish extends Auditable<User> {
     private String name;
     private String description;
     private Double price;
+
+    private boolean deleted=false;
+
     @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL)
     private List<DishIngredient> ingredients;
     @ManyToOne

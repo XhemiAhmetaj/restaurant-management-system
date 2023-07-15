@@ -22,7 +22,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ikubinfo.project.restaurantapp.domain.exception.ExceptionConstants.*;
 import static com.ikubinfo.project.restaurantapp.domain.mapper.DishMapper.toDto;
+import static java.lang.String.format;
 
 @Service
 @RequiredArgsConstructor
@@ -37,24 +39,22 @@ public class DishServiceImpl implements DishService {
     public Dish findById(Long id) {
         return dishRepository.findById(id)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("Dish not found!"));
+                        () -> new ResourceNotFoundException(format(DISH_NOT_FOUND,id)));
     }
 
     @Override
     public Category findCategoryById(Long id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found!"));
+        return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(format(CATEGORY_NOT_FOUND,id)));
     }
-
-//    @Override
-//    public CategoryDTO addCategory(CategoryDTO categoryDTO) {
-//        Category cat = DishMapper.toEntity(categoryDTO);
-//        return toDto(categoryRepository.save(cat));
-//    }
 
     @Override
     public CategoryDTO addCategory(Long catId, CategoryDTO categoryDTO) {
         Category cat = DishMapper.toEntity(categoryDTO);
-        cat.setCategoryParent(categoryRepository.findById(catId).orElseThrow(()-> new ResourceNotFoundException("Category not found!")));
+        if(catId!=null){
+            cat.setCategoryParent(categoryRepository.findById(catId).orElseThrow(()-> new ResourceNotFoundException(format(CATEGORY_NOT_FOUND,catId))));
+        }else {
+            cat.setCategoryParent(null);
+        }
         return toDto(categoryRepository.save(cat));
     }
 
@@ -106,7 +106,7 @@ public class DishServiceImpl implements DishService {
     @Override
     public DishIngredientDTO addIngredient(Long dishId, DishIngredientDTO ingredientDTO, Long productId) {
         Dish dish = findById(dishId);
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Dish not found!"));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(format(DISH_NOT_FOUND,dishId)));
         DishIngredient ingredient = DishMapper.toEntity(dish,ingredientDTO, product);
         return toDto(dishIngredient.save(ingredient));
     }
