@@ -75,18 +75,4 @@ public class UserController {
         return ResponseEntity.ok(userService.filterUsers(criteria,pageParameterDTO));
     }
 
-//    @GetMapping()
-//    @ResponseBody
-//    public List<User> findAll(@RequestParam(value = "search", required = false) String search) {
-//        List<SearchCriteria> params = new ArrayList<SearchCriteria>();
-//        if (search != null) {
-//            Pattern pattern = Pattern.compile("\(\w+?)(:|<|>)(\w+?),");
-//            Matcher matcher = pattern.matcher(search + ",");
-//            while (matcher.find()) {
-//                params.add(new SearchCriteria(matcher.group(1),
-//                        matcher.group(2), matcher.group(3)));
-//            }
-//        }
-//        return userService.se
-//    }
 }

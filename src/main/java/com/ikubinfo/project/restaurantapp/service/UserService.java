@@ -23,4 +23,5 @@ public interface UserService {
     Page<UserDTO> findUserByRole (String role, PageParameterDTO pageDTO);
     Page<UserDTO> filterUsers(List<SearchCriteria> searchCriteria, PageParameterDTO pageDTO);
 
+    void getSpecialOffer();
 }

@@ -20,4 +20,5 @@ public interface UserRepository extends JpaRepository<User,Long> , JpaSpecificat
     List<User> findUsersByRole(UserRole role);
     Page<User> findUserByRole(UserRole role, Pageable pageable);
 
+    List<User> findByOrderByTotalPointsAsc();
 }

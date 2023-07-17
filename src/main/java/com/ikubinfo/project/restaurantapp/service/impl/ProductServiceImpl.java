@@ -1,17 +1,24 @@
 package com.ikubinfo.project.restaurantapp.service.impl;
 
+import com.ikubinfo.project.restaurantapp.domain.dto.PageParameterDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.ProductDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.update.ProductUpdatedDTO;
 import com.ikubinfo.project.restaurantapp.domain.entity.Product;
 import com.ikubinfo.project.restaurantapp.domain.exception.ResourceNotFoundException;
-import com.ikubinfo.project.restaurantapp.domain.mapper.DishMapper;
 import com.ikubinfo.project.restaurantapp.domain.mapper.ProductMapper;
-import com.ikubinfo.project.restaurantapp.domain.mapper.UserMapper;
 import com.ikubinfo.project.restaurantapp.repository.ProductRepository;
+import com.ikubinfo.project.restaurantapp.repository.specification.ProductSpecification;
+import com.ikubinfo.project.restaurantapp.repository.specification.SearchCriteria;
+import com.ikubinfo.project.restaurantapp.service.EmailSenderService;
 import com.ikubinfo.project.restaurantapp.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,14 +26,15 @@ import java.util.stream.Collectors;
 
 import static com.ikubinfo.project.restaurantapp.domain.exception.ExceptionConstants.PRODUCT_NOT_FOUND;
 import static com.ikubinfo.project.restaurantapp.domain.mapper.ProductMapper.toDto;
-import static com.ikubinfo.project.restaurantapp.domain.mapper.ProductMapper.toUpdateDto;
 import static java.lang.String.format;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final EmailSenderService emailService;
 
     @Override
     public ProductDTO addProduct(ProductDTO dto) {
@@ -50,6 +58,30 @@ public class ProductServiceImpl implements ProductService {
         return toDto(productRepository.save(product));
     }
 
+    @Scheduled(cron = "0 0 4 1/2 * ?")
+    @Override
+    public void findProductsWithLessQuantity(){
+        List<ProductDTO> productDTOList = productRepository.findProductsByQuantityIsLessThanEqual(1000.0).stream().map(ProductMapper::toDto).collect(Collectors.toList());
+        String body = "";
+        if(!productDTOList.isEmpty()){
+            for(ProductDTO product : productDTOList){
+               body = body.concat("Product: "+product.getName() + " Quantity: "+product.getQuantity()+ " " + product.getMeasurement() + "\n");
+            }
+            emailService.sendEmail("xh.ahmetaj22@gmail.com", "Warning! Check low quantity products.!!", body);
+        }
+    }
+
+    @Override
+    public Page<ProductDTO> filterProducts(List<SearchCriteria> searchCriteria, PageParameterDTO pageDTO){
+        Sort sort = Sort.by(pageDTO.getSortDirection(), pageDTO.getSort());
+        Pageable pageable = PageRequest.of(pageDTO.getPageNumber(), pageDTO.getPageSize(), sort);
+        if (searchCriteria != null && searchCriteria.size() > 0) {
+            var productSpec = ProductSpecification.toSpecification(searchCriteria);
+            return productRepository.findAll(productSpec, pageable).map(ProductMapper::toDto);
+        } else {
+            return productRepository.findAll(pageable).map(ProductMapper::toDto);
+        }
+    }
 
 
 }

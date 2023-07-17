@@ -1,9 +1,13 @@
 package com.ikubinfo.project.restaurantapp.controller;
 
+import com.ikubinfo.project.restaurantapp.domain.dto.PageParameterDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.ProductDTO;
+import com.ikubinfo.project.restaurantapp.domain.dto.UserDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.update.ProductUpdatedDTO;
+import com.ikubinfo.project.restaurantapp.repository.specification.SearchCriteria;
 import com.ikubinfo.project.restaurantapp.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,5 +37,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.updateProduct(id, dto));
     }
 
+    @PostMapping("/list")
+    public ResponseEntity<Page<ProductDTO>> filterProducts (@RequestBody List<SearchCriteria> criteria, PageParameterDTO pageParameterDTO) {
+        return ResponseEntity.ok(productService.filterProducts(criteria,pageParameterDTO));
+    }
 
 }

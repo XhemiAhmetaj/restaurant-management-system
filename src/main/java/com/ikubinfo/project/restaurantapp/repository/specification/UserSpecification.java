@@ -17,11 +17,6 @@ public class UserSpecification extends GenericSpecification<User> {
     public UserSpecification() {
     }
 
-//    @Override
-//    public SearchCriteria getSearchCriteria() {
-//        return searchCriteria;
-//    }
-
     public static Specification<User> toSpecification(List<SearchCriteria> filters) {
 
         log.info("filters {}",filters.size());

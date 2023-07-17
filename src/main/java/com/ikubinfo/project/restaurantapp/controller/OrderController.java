@@ -1,11 +1,10 @@
 package com.ikubinfo.project.restaurantapp.controller;
 
-import com.ikubinfo.project.restaurantapp.domain.dto.AddItemDTO;
-import com.ikubinfo.project.restaurantapp.domain.dto.CheckOutDTO;
-import com.ikubinfo.project.restaurantapp.domain.dto.OrderDTO;
-import com.ikubinfo.project.restaurantapp.domain.dto.ReceiptDTO;
+import com.ikubinfo.project.restaurantapp.domain.dto.*;
+import com.ikubinfo.project.restaurantapp.repository.specification.SearchCriteria;
 import com.ikubinfo.project.restaurantapp.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,6 +56,11 @@ public class OrderController {
     @DeleteMapping("/{orderId}/item/{orderItem}")
     public ResponseEntity<Void> removeItem(@PathVariable Long orderId, @PathVariable Long orderItem){
         return ResponseEntity.ok(orderService.removeItem(orderId,orderItem));
+    }
+
+    @PostMapping("/list")
+    public ResponseEntity<Page<OrderDTO>> filterProducts (@RequestBody List<SearchCriteria> criteria, PageParameterDTO pageParameterDTO) {
+        return ResponseEntity.ok(orderService.filterOrders(criteria,pageParameterDTO));
     }
 
 }

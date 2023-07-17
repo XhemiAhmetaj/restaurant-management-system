@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +28,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import static com.ikubinfo.project.restaurantapp.domain.exception.ExceptionConstants.USER_NOT_FOUND;
@@ -118,7 +120,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Sort sort = Sort.by(pageDTO.getSortDirection(), pageDTO.getSort());
         Pageable pageable = PageRequest.of(pageDTO.getPageNumber(),pageDTO.getPageSize(),sort);
         if(searchCriteria!=null && searchCriteria.size()>0){
-            log.info("list = {} " ,searchCriteria);
+             log.info("list = {} " ,searchCriteria);
             var userSpec = UserSpecification.toSpecification(searchCriteria);
 
             return userRepository.findAll(userSpec,pageable).map(UserMapper::toDto);
@@ -126,6 +128,28 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return userRepository.findAll(pageable).map(UserMapper::toDto);
         }
     }
+
+    @Scheduled(cron = "0 0 0 L * ?") //last day of every month
+    @Override
+    public void getSpecialOffer(){
+        List<User> users = userRepository.findAll(Sort.by(Sort.Direction.DESC, "totalPoints")).subList(0,4);
+        Random random = new Random();
+        int elements = 2;
+        for(int i=0; i<elements; i++){
+            int rand = random.nextInt(users.size());
+            User randomUser = users.get(rand);
+            users.remove(rand);
+
+            emailService.sendEmail(randomUser.getEmail(), "Congrats!You just won a free dinner!",
+                    "Dear "+randomUser.getName() +
+                    "\nAs we thank you for your loyalty, we want to inform you that you just won a free dinner for 2 people at our " +
+                            "restaurant. Please confirm or contact us at our mobile number for further information. \n" +
+                            "Note: This offer is valid for a week."+
+                    "\n\nBest Regards, \nRestaurantTeam");
+        }
+
+    }
+
 
 
 }

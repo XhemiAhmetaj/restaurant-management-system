@@ -30,6 +30,5 @@ public class UserDTO {
     private String phoneNumber;
     private LocalDate birthday;
 
-    @JsonIgnore
     private Integer totalPoints;
 }

@@ -1,6 +1,8 @@
 package com.ikubinfo.project.restaurantapp.service;
 
 import com.ikubinfo.project.restaurantapp.domain.dto.*;
+import com.ikubinfo.project.restaurantapp.repository.specification.SearchCriteria;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -17,4 +19,6 @@ public interface OrderService {
     ReceiptDTO placeOrder(Long orderId, CheckOutDTO checkOutDTO);
 
     Void changeStatus(Long orderId, String status);
+
+    Page<OrderDTO> filterOrders(List<SearchCriteria> searchCriteria, PageParameterDTO pageDTO);
 }

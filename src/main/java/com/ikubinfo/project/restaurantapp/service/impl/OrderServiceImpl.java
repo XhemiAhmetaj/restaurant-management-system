@@ -1,21 +1,27 @@
 package com.ikubinfo.project.restaurantapp.service.impl;
 
-import com.ikubinfo.project.restaurantapp.domain.dto.AddItemDTO;
-import com.ikubinfo.project.restaurantapp.domain.dto.CheckOutDTO;
-import com.ikubinfo.project.restaurantapp.domain.dto.OrderDTO;
-import com.ikubinfo.project.restaurantapp.domain.dto.ReceiptDTO;
+import com.ikubinfo.project.restaurantapp.domain.dto.*;
 import com.ikubinfo.project.restaurantapp.domain.entity.*;
 import com.ikubinfo.project.restaurantapp.domain.entity.enums.OrderStatus;
 import com.ikubinfo.project.restaurantapp.domain.exception.ResourceNotFoundException;
 import com.ikubinfo.project.restaurantapp.domain.mapper.OrderMapper;
+import com.ikubinfo.project.restaurantapp.domain.mapper.ProductMapper;
 import com.ikubinfo.project.restaurantapp.domain.mapper.ReceiptMapper;
 import com.ikubinfo.project.restaurantapp.domain.mapper.UserMapper;
 import com.ikubinfo.project.restaurantapp.repository.*;
+import com.ikubinfo.project.restaurantapp.repository.specification.OrderSpecification;
+import com.ikubinfo.project.restaurantapp.repository.specification.ProductSpecification;
+import com.ikubinfo.project.restaurantapp.repository.specification.SearchCriteria;
+import com.ikubinfo.project.restaurantapp.repository.specification.UserSpecification;
 import com.ikubinfo.project.restaurantapp.service.OrderService;
 import com.ikubinfo.project.restaurantapp.service.PaymentService;
 import com.ikubinfo.project.restaurantapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -235,6 +241,19 @@ public class OrderServiceImpl implements OrderService {
                         return null;
                         })).collect(Collectors.toList());
 
+    }
+
+    @Override
+    public Page<OrderDTO> filterOrders(List<SearchCriteria> searchCriteria, PageParameterDTO pageDTO){
+        Sort sort = Sort.by(pageDTO.getSortDirection(), pageDTO.getSort());
+        Pageable pageable = PageRequest.of(pageDTO.getPageNumber(),pageDTO.getPageSize(),sort);
+        if(searchCriteria!=null && searchCriteria.size()>0){
+            var orderSpec = OrderSpecification.toSpecification(searchCriteria);
+
+            return orderRepository.findAll(orderSpec,pageable).map(OrderMapper::toDto);
+        }else {
+            return orderRepository.findAll(pageable).map(OrderMapper::toDto);
+        }
     }
 
 
