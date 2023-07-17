@@ -62,7 +62,6 @@ public class SecurityConfig {
                                 () -> new UsernameNotFoundException(format("User: %s, not found", username))))
                 .passwordEncoder(bCryptPasswordEncoder)
                 .and()
-                .authenticationEventPublisher(new CustumEventPublisher())
                 .build();
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface RestaurantService {
 
-//    List<MenuDTO> getMenu();
+    List<MenuDTO> getMenu();
 
     RestaurantTableDTO addTable(RestaurantTableDTO dto);
     List<RestaurantTableDTO> listAllTables();

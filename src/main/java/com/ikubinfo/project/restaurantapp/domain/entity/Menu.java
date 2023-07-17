@@ -23,6 +23,9 @@ public class Menu extends Auditable<User> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
-    private List<Dish> dishes;
+//    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
+//    private List<Category> categories;
+
+//    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
+//    private List<Dish> dishes;
 }

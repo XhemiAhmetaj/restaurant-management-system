@@ -1,25 +1,34 @@
 package com.ikubinfo.project.restaurantapp.service.impl;
 
+import com.ikubinfo.project.restaurantapp.domain.dto.PageParameterDTO;
 import com.ikubinfo.project.restaurantapp.domain.dto.ReservationDTO;
 import com.ikubinfo.project.restaurantapp.domain.entity.Reservation;
 import com.ikubinfo.project.restaurantapp.domain.entity.RestaurantTable;
+import com.ikubinfo.project.restaurantapp.domain.entity.TableReservation;
 import com.ikubinfo.project.restaurantapp.domain.entity.enums.TableStatus;
 import com.ikubinfo.project.restaurantapp.domain.exception.BadRequestException;
 import com.ikubinfo.project.restaurantapp.domain.exception.ResourceNotFoundException;
 import com.ikubinfo.project.restaurantapp.domain.mapper.RestaurantMapper;
 import com.ikubinfo.project.restaurantapp.repository.ReservationRepository;
 import com.ikubinfo.project.restaurantapp.repository.RestaurantTableRepository;
+import com.ikubinfo.project.restaurantapp.repository.TableReservationRepository;
+import com.ikubinfo.project.restaurantapp.service.EmailSenderService;
 import com.ikubinfo.project.restaurantapp.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.ikubinfo.project.restaurantapp.domain.exception.ExceptionConstants.*;
-import static com.ikubinfo.project.restaurantapp.domain.mapper.RestaurantMapper.toDto;
+import static com.ikubinfo.project.restaurantapp.domain.mapper.RestaurantMapper.*;
 import static java.lang.String.format;
 
 @Service
@@ -29,39 +38,46 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final RestaurantTableRepository tableRepository;
+    private final TableReservationRepository tableReservationRepository;
+    private final EmailSenderService emailService;
+
     @Override
-    public ReservationDTO reserveTable(ReservationDTO reservationDTO) {
+    public ReservationDTO reserveTable(ReservationDTO reservationDTO){
         Reservation reservation = new Reservation();
-        RestaurantTable table = tableRepository.findById(reservationDTO.getTableId()).orElseThrow(()-> new ResourceNotFoundException(format(TABLE_NOT_FOUND,reservationDTO.getTableId())));
-            List<Reservation> tableReservations = reservationRepository.findByDate(reservationDTO.getDate()).stream()
-                    .filter(r -> r.getTable().getTableId().equals(reservationDTO.getTableId()))
-                    .collect(Collectors.toList());
+        TableReservation tableReservation = new TableReservation();
+        RestaurantTable table = tableRepository.findById(reservationDTO.getTableId()).orElseThrow();
 
-            List<Reservation> reservationList = tableReservations.stream()
-                    .filter(res -> reservationDTO.getTime().isBefore(res.getTime().minusMinutes(115)) ||
-                            reservationDTO.getTime().isAfter(res.getTime().plusMinutes(115)))
-                    .collect(Collectors.toList());
+        List<TableReservation> tableReservations = tableReservationRepository.findAllByDate(reservationDTO.getDate()).stream()
+                        .filter(t-> (reservationDTO.getTime().isAfter(t.getStartTime().minusMinutes(115)) &&
+                                        reservationDTO.getTime().isBefore(t.getStartTime().plusMinutes(115))))
+                                .collect(Collectors.toList());
 
-            if (reservationList.size()==tableReservations.size()) {
+        if (tableReservations.isEmpty()) {
                 createReservation(reservation, reservationDTO,table);
-//                table.setTableStatus(TableStatus.RESERVED);
-//                tableRepository.save(table);
                 reservationRepository.save(reservation);
+
+                createTableReservation(reservation, tableReservation, table);
+                tableReservationRepository.save(tableReservation);
+
+                emailService.sendEmail(reservation.getCreatedBy().getEmail(), "Reservation Confirmed!",
+                        "Dear "+reservation.getCreatedBy().getName()+
+                                "\nYour reservation at our restaurant is confirmed!"+
+                                "\n\nBooking Details"+
+                                "\nReservation name: "+reservation.getCreatedBy().getName() + " " + reservation.getCreatedBy().getLastname() +
+                                "\nDate: "+reservation.getDate()+
+                                "\nTime: " + reservation.getTime()+
+                                "\nNumber of People: " + reservation.getNumberOfPeople()+
+                                "\nTable: "+ reservation.getTable().getTableId() + " " + reservation.getTable().getDescription()+
+                                "\n\nWe hope you have a great time!"+
+                                "\n\nAll the best, \nReservationTeam");
+
             }else {
                 throw new BadRequestException(TABLE_TIME_RESERVED);
             }
+
         return toDto(reservation);
     }
 
-    public ReservationDTO createReservation(Reservation reservation, ReservationDTO reservationDTO, RestaurantTable table){
-        reservation.setComment(reservationDTO.getComment());
-        reservation.setDate(reservationDTO.getDate());
-        reservation.setTime(reservationDTO.getTime());
-        reservation.setTable(table);
-        table.setTableStatus(TableStatus.RESERVED);
-        tableRepository.save(table);
-        return toDto(reservation);
-    }
 
     @Override
     public List<ReservationDTO> showAllReservations() {
@@ -79,6 +95,12 @@ public class ReservationServiceImpl implements ReservationService {
                 .filter(reservation -> reservation.getCreatedBy().getId().equals(userId))
                 .map(RestaurantMapper::toDto)
                 .collect(Collectors.toList());
+    }
 
+    @Override
+    public Page<ReservationDTO> findReservationByTableAndDate(LocalDate date, PageParameterDTO pageDTO){
+        Sort sort = Sort.by(pageDTO.getSortDirection(), pageDTO.getSort());
+        Pageable pageable = PageRequest.of(pageDTO.getPageNumber(),pageDTO.getPageSize(),sort);
+        return reservationRepository.findReservationsByDate(date,pageable).map(RestaurantMapper::toDto);
     }
 }

@@ -13,6 +13,7 @@ import com.ikubinfo.project.restaurantapp.repository.UserRepository;
 import com.ikubinfo.project.restaurantapp.repository.specification.GenereticSpecification;
 import com.ikubinfo.project.restaurantapp.repository.specification.SearchCriteria;
 import com.ikubinfo.project.restaurantapp.repository.specification.UserSpecification;
+import com.ikubinfo.project.restaurantapp.service.EmailSenderService;
 import com.ikubinfo.project.restaurantapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final OrderRepository orderRepository;
+    private final EmailSenderService emailService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -72,6 +74,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         u.setPassword(passwordEncoder.encode(req.getPassword()));
         u.setTotalPoints(0);
         u = userRepository.save(u);
+
+        emailService.sendEmail(u.getEmail(), "Registration Confirmed!",
+                "Hello "+ u.getName()+
+                        "\nWelcome to our restaurant! ");
 
         return UserMapper.toDto(u);
     }
@@ -106,31 +112,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return UserMapper.toUpdateDto(userRepository.save(u));
     }
 
-//    @Override
-//    public Page<User> findAllCustomers(PageParameterDTO pageParams) {
-//        return  userRepository.findUsersByRole_Customer(
-//                pageParams.getSortDirection().isAscending()
-//                        ?
-//                        PageRequest.of(pageParams.getPageNumber(), pageParams.getPageSize()
-//                                , Sort.Direction.ASC, pageParams.getSort())
-//                        :
-//                        PageRequest.of(pageParams.getPageNumber(), pageParams.getPageSize()
-//                                , Sort.Direction.DESC, pageParams.getSort()));
-//    }
-
     @Override
     public Page<UserDTO> findUserByRole(String role, PageParameterDTO pageDTO) {
         Sort sort = Sort.by(pageDTO.getSortDirection(), pageDTO.getSort());
-        Pageable pageable = PageRequest.of(pageDTO.getPageNumber(),
-                pageDTO.getPageSize(),sort);
+        Pageable pageable = PageRequest.of(pageDTO.getPageNumber(),pageDTO.getPageSize(),sort);
         return userRepository.findUserByRole(UserRole.fromValue(role),pageable).map(UserMapper::toDto);
     }
 
     @Override
     public Page<UserDTO> filterUsers(List<SearchCriteria> searchCriteria, PageParameterDTO pageDTO) {
         Sort sort = Sort.by(pageDTO.getSortDirection(), pageDTO.getSort());
-        Pageable pageable = PageRequest.of(pageDTO.getPageNumber(),
-                pageDTO.getPageSize(),sort);
+        Pageable pageable = PageRequest.of(pageDTO.getPageNumber(),pageDTO.getPageSize(),sort);
         if(searchCriteria!=null && searchCriteria.size()>0){
             var userSpec = UserSpecification.toSpecification(searchCriteria);
             return userRepository.findAll(userSpec,pageable).map(UserMapper::toDto);

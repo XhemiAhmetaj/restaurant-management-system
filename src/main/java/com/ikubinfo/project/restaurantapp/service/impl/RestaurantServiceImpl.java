@@ -5,6 +5,7 @@ import com.ikubinfo.project.restaurantapp.domain.dto.RestaurantTableDTO;
 import com.ikubinfo.project.restaurantapp.domain.entity.RestaurantTable;
 import com.ikubinfo.project.restaurantapp.domain.entity.enums.TableStatus;
 import com.ikubinfo.project.restaurantapp.domain.mapper.RestaurantMapper;
+import com.ikubinfo.project.restaurantapp.repository.CategoryRepository;
 import com.ikubinfo.project.restaurantapp.repository.MenuRepository;
 import com.ikubinfo.project.restaurantapp.repository.RestaurantTableRepository;
 import com.ikubinfo.project.restaurantapp.service.RestaurantService;
@@ -22,11 +23,13 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     private final MenuRepository menuRepository;
     private final RestaurantTableRepository repository;
+    private final CategoryRepository categoryRepository;
 
-//    @Override
-//    public List<MenuDTO> getMenu() {
-//        return menuRepository.findAll().stream().map(RestaurantMapper::toDto).collect(Collectors.toList());
-//    }
+    @Override
+    public List<MenuDTO> getMenu() {
+//        return categoryRepository.findAll().stream().map(RestaurantMapper::toDto).collect(Collectors.toList());
+        return null;
+    }
 
     @Override
     public RestaurantTableDTO addTable(RestaurantTableDTO dto) {

@@ -25,6 +25,7 @@ public class Reservation extends Auditable<User> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Integer numberOfPeople;
     private String comment;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
