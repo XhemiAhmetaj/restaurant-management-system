@@ -6,6 +6,7 @@ import com.ikubinfo.project.restaurantapp.domain.dto.UserDTO;
 import com.ikubinfo.project.restaurantapp.domain.entity.User;
 import com.ikubinfo.project.restaurantapp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +32,13 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(path = "/auth")
 @RequiredArgsConstructor @Validated
+@Slf4j
 public class AuthController {
 
   private final AuthenticationManager authenticationManager;
   private final JwtEncoder jwtEncoder;
   private final UserService userService;
-
+  private final String tokenStatik = "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJndWVzdEBnbWFpbC5jb20iLCJhdWQiOiJBdWRpZW5jYSIsInJvbGVzIjoiQ1VTVE9NRVIiLCJpc3MiOiJpa3ViaW5mby5hbCIsImV4cCI6MTE2ODk2MTk3MzYsImlhdCI6MTY4OTYxOTczN30.OdxN2yS-25AYXFeXct2bnqJ7XQDwyaFQgBBaehKsMe5npsEX8UL8i8S85lGmvtkEPj_vuk48viXCUAI67if-BByF47Ae45Xt9sratWTppkLbj_TA_Dvdj-oyCW8zJZgd3eYJvp2TYGyMxXJWuRm1CwVygWY7AJXaq5XgZnhHt6K2KUQkm02I2znSu6RHieKkaIPiADicM3MSm85ohZyuKZ2IAuXJ8ZAX9j_EBWpA86v2WCapEaasWT-Bum6q2UuuRPmNbsJmXQ6loZPLGKR-83UjMiOxZPyE2X4q5Rg1ubrhLrPBaI4z3anc6AWmU9fCF61HYW3iTSdNXgkL2JfV6Q";
   @PostMapping("/login")
   public ResponseEntity<TokenDTO> login(@RequestBody @Valid AuthRequest request) {
     try {
@@ -64,7 +66,20 @@ public class AuthController {
                       .audience(Arrays.asList("Audienca"))
                       .build();
 
-      String token = this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+      String token = "";
+
+
+      String userEmail = user.getEmail();
+      if(userEmail.equals("guest@gmail.com")){
+        token = tokenStatik;
+        log.info("--------token statik-------" + token);
+      }else{
+        token = this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        log.info("--------token-------" + token);
+
+      }
+
+//      String token = this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
       return ResponseEntity.ok()
               .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(token))

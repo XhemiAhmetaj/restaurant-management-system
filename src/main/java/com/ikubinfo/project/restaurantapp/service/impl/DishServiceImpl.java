@@ -81,7 +81,6 @@ public class DishServiceImpl implements DishService {
     @Override
     public DishUpdatedDTO updateDish(Long id, DishUpdatedDTO dto) {
         Dish dish = findById(id);
-//        dish = DishMapper.buildDish(dish,dto);
         dish = dishRepository.save(DishMapper.buildDish(dish,dto));
         return  DishMapper.updateDishDTO(dish);
     }

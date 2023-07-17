@@ -44,8 +44,8 @@ public class Order extends Auditable<User> {
     @ManyToOne
     @JoinColumn(name = "table_id", referencedColumnName = "id")
     private RestaurantTable table;
-
-    @OneToOne
-    @JoinColumn(name = "receipt_id", referencedColumnName = "id")
-    private Receipt receipt;
+//
+//    @OneToOne
+//    @JoinColumn(name = "receipt_id", referencedColumnName = "id")
+//    private Receipt receipt;
 }

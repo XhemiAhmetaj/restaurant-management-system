@@ -18,6 +18,8 @@ public class ExceptionConstants {
     public static final String TABLE_NOT_FOUND = "Table with id %s not found!";
     public static final String TABLE_RESERVED = "The table is reserved. Please choose another table.";
     public static final String TABLE_TIME_RESERVED = "Not available! Please schedule another time.";
+    public static final String USER_NOT_AUTHENTICATED = "You should login to make a reservation";
+    public static final String ORDER_PLACED_BEFORE = "Order is placed before. Please create another order.";
 
 
 

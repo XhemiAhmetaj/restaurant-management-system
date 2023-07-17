@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .findByEmail(email)
                 .orElseThrow(
                         () -> new UsernameNotFoundException(
-                                format("User with username - %s, not found", email)));
+                                format(USER_NOT_FOUND, email)));
     }
 
     @Override
@@ -74,10 +74,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         u.setPassword(passwordEncoder.encode(req.getPassword()));
         u.setTotalPoints(0);
         u = userRepository.save(u);
-
-        emailService.sendEmail(u.getEmail(), "Registration Confirmed!",
-                "Hello "+ u.getName()+
-                        "\nWelcome to our restaurant! ");
 
         return UserMapper.toDto(u);
     }
@@ -124,7 +120,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Sort sort = Sort.by(pageDTO.getSortDirection(), pageDTO.getSort());
         Pageable pageable = PageRequest.of(pageDTO.getPageNumber(),pageDTO.getPageSize(),sort);
         if(searchCriteria!=null && searchCriteria.size()>0){
+            log.info("list = {} " ,searchCriteria);
             var userSpec = UserSpecification.toSpecification(searchCriteria);
+
             return userRepository.findAll(userSpec,pageable).map(UserMapper::toDto);
         }else {
             return userRepository.findAll(pageable).map(UserMapper::toDto);

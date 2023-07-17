@@ -1,15 +1,18 @@
 package com.ikubinfo.project.restaurantapp.repository.specification;
 
 import com.ikubinfo.project.restaurantapp.domain.entity.User;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
+@Slf4j
 public class UserSpecification extends GenereticSpecification<User> {
-    private SearchCriteria searchCriteria;
+
 
     public UserSpecification(SearchCriteria searchCriteria) {
-        this.searchCriteria = searchCriteria;
+        super.criteria = searchCriteria;
     }
 
     public UserSpecification() {
@@ -20,9 +23,19 @@ public class UserSpecification extends GenereticSpecification<User> {
 //        return searchCriteria;
 //    }
 
-    public static Specification<User> toSpecification(List<SearchCriteria> filters){
-        final Specification<User> specification = new UserSpecification();
-        filters.forEach(f-> specification.or(new UserSpecification(f)));
+    public static Specification<User> toSpecification(List<SearchCriteria> filters) {
+
+        log.info("filters {}",filters.size());
+        Specification<User> specification = null;//= new UserSpecification();
+
+        for (SearchCriteria filter : filters) {
+            if (specification == null){
+                specification = new UserSpecification(filter);
+            } else {
+                specification = specification.and(new UserSpecification(filter));
+            }
+        }
+
         return specification;
     }
 

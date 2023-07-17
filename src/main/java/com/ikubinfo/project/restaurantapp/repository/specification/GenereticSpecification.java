@@ -1,5 +1,8 @@
 package com.ikubinfo.project.restaurantapp.repository.specification;
 
+import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -13,13 +16,16 @@ import java.util.Date;
 import java.util.List;
 
 
+@ToString
 public class GenereticSpecification<T> implements Specification<T> {
-    private SearchCriteria criteria;
+    protected SearchCriteria criteria;
+    private Logger logger = LoggerFactory.getLogger(GenereticSpecification.class);
 //    public  SearchCriteria getSearchCriteria();
 
 
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        logger.info("Criteria {}",criteria);
         if (criteria.getOperation().equalsIgnoreCase(">=")) {
             return criteriaBuilder.greaterThanOrEqualTo(
                     root.<String> get(criteria.getKey()), criteria.getValue().toString());
@@ -53,6 +59,8 @@ public class GenereticSpecification<T> implements Specification<T> {
             var endDate = Date.from(endInstant);
             return criteriaBuilder.between(root.get(criteria.getKey()), startDate, endDate);
         }
+
+
         return null;
     }
 

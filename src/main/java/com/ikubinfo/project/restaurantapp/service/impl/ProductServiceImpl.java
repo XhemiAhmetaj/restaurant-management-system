@@ -17,8 +17,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ikubinfo.project.restaurantapp.domain.exception.ExceptionConstants.PRODUCT_NOT_FOUND;
 import static com.ikubinfo.project.restaurantapp.domain.mapper.ProductMapper.toDto;
 import static com.ikubinfo.project.restaurantapp.domain.mapper.ProductMapper.toUpdateDto;
+import static java.lang.String.format;
 
 @Service
 @RequiredArgsConstructor
@@ -43,8 +45,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO updateProduct(Long id, ProductUpdatedDTO dto) {
         Product product = productRepository.findById(id).orElseThrow(
-                ()->new ResourceNotFoundException("Product not found"));
-        product = ProductMapper.updateProduct(product,dto);
+                ()->new ResourceNotFoundException(format(PRODUCT_NOT_FOUND,id)));
+        ProductMapper.updateProduct(product, dto);
         return toDto(productRepository.save(product));
     }
+
+
+
 }

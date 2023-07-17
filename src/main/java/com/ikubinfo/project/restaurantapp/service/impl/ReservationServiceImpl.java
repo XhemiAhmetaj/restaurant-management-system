@@ -54,7 +54,11 @@ public class ReservationServiceImpl implements ReservationService {
 
         if (tableReservations.isEmpty()) {
                 createReservation(reservation, reservationDTO,table);
-                reservationRepository.save(reservation);
+                if(reservation.getCreatedBy().getEmail().equals("guest@gmail.com")){
+                    throw new BadRequestException(USER_NOT_AUTHENTICATED);
+                }else {
+                    reservationRepository.save(reservation);
+                }
 
                 createTableReservation(reservation, tableReservation, table);
                 tableReservationRepository.save(tableReservation);

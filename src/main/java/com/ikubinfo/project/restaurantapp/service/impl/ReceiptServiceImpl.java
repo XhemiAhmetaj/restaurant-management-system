@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ikubinfo.project.restaurantapp.domain.exception.ExceptionConstants.RECEIPT_NOT_FOUND;
+import static java.lang.String.format;
+
 @Service
 @RequiredArgsConstructor
 public class ReceiptServiceImpl implements ReceiptService {
@@ -19,13 +22,12 @@ public class ReceiptServiceImpl implements ReceiptService {
     private final ReceiptRepository repository;
     @Override
     public ReceiptDTO getReceipt(Long id) {
-        Receipt receipt= repository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Receipt not found!"));
+        Receipt receipt= repository.findById(id).orElseThrow(()-> new ResourceNotFoundException(format(RECEIPT_NOT_FOUND,id)));
         return ReceiptMapper.toDto(receipt);
     }
 
     @Override
     public List<ReceiptDTO> getAllReceiptFromUser(Long userId) {
-        List<ReceiptDTO> list = repository.findReceiptsByOrder_UserId(userId).stream().map(ReceiptMapper::toDto).collect(Collectors.toList());
-        return list;
+        return repository.findReceiptsByOrder_UserId(userId).stream().map(ReceiptMapper::toDto).collect(Collectors.toList());
     }
 }

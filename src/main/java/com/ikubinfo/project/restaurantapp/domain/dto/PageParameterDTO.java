@@ -16,6 +16,5 @@ public class PageParameterDTO {
     private Integer pageSize = 10;
     private Sort.Direction sortDirection = Sort.Direction.ASC;
     private String sort = "";
-
-
+    private String sortField;
 }

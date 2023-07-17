@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ikubinfo.project.restaurantapp.domain.exception.ExceptionConstants.TABLE_NOT_FOUND;
+import static java.lang.String.format;
+
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +51,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public RestaurantTableDTO updateTable(Long id, String status) {
         RestaurantTable table = repository.findById(id).orElseThrow(
-                () -> new UsernameNotFoundException("Table not found!"));
+                () -> new UsernameNotFoundException(format(TABLE_NOT_FOUND,id)));
         table.setTableStatus(TableStatus.fromValue(status));
         return RestaurantMapper.toDto(repository.save(table));
     }
