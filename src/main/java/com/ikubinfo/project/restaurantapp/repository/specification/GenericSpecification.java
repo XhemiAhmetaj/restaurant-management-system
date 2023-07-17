@@ -17,9 +17,9 @@ import java.util.List;
 
 
 @ToString
-public class GenereticSpecification<T> implements Specification<T> {
+public class GenericSpecification<T> implements Specification<T> {
     protected SearchCriteria criteria;
-    private Logger logger = LoggerFactory.getLogger(GenereticSpecification.class);
+    private Logger logger = LoggerFactory.getLogger(GenericSpecification.class);
 //    public  SearchCriteria getSearchCriteria();
 
 
