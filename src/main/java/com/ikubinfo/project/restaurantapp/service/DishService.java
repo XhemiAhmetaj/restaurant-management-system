@@ -13,11 +13,11 @@ import java.util.List;
 
 public interface DishService {
 
-    Category findCategoryById(Long id);
-//    CategoryDTO addCategory(CategoryDTO categoryDTO);
-    CategoryDTO addCategory(Long id, CategoryDTO categoryDTO);
-    List<CategoryDTO> listCategories();
-    Void deleteCategory(Long id);
+//    Category findCategoryById(Long id);
+////    CategoryDTO addCategory(CategoryDTO categoryDTO);
+//    CategoryDTO addCategory(Long id, CategoryDTO categoryDTO);
+//    List<CategoryDTO> listCategories();
+//    Void deleteCategory(Long id);
 
     Dish findById(Long id);
     List<DishDTO> listAllDishes();

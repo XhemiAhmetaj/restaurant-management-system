@@ -1,13 +1,8 @@
 package com.ikubinfo.project.restaurantapp.domain.mapper;
 
-import com.ikubinfo.project.restaurantapp.domain.dto.CategoryDTO;
-import com.ikubinfo.project.restaurantapp.domain.dto.DishDTO;
-import com.ikubinfo.project.restaurantapp.domain.dto.DishIngredientDTO;
+import com.ikubinfo.project.restaurantapp.domain.dto.*;
 import com.ikubinfo.project.restaurantapp.domain.dto.update.DishUpdatedDTO;
-import com.ikubinfo.project.restaurantapp.domain.entity.Category;
-import com.ikubinfo.project.restaurantapp.domain.entity.Dish;
-import com.ikubinfo.project.restaurantapp.domain.entity.DishIngredient;
-import com.ikubinfo.project.restaurantapp.domain.entity.Product;
+import com.ikubinfo.project.restaurantapp.domain.entity.*;
 
 import java.util.stream.Collectors;
 
@@ -67,8 +62,10 @@ public class DishMapper {
         return CategoryDTO.builder()
                 .id(category.getId())
                 .name(category.getName())
-                .categoryParent(category.getCategoryParent()!=null?DishMapper.toDto(category.getCategoryParent()):null)
+//                .categoryParent(category.getCategoryParent()!=null?DishMapper.toDto(category.getCategoryParent()):null)
+                .categoryChild(category.getSubCategories()!=null?category.getSubCategories().stream().map(DishMapper::toDto).collect(Collectors.toList()):null)
                 .dishes(category.getDishes()!=null?category.getDishes().stream().map(DishMapper::toDto).collect(Collectors.toList()) : null)
+                .drinks(category.getDrinks()!=null?category.getDrinks().stream().map(DishMapper::toDto).collect(Collectors.toList()) : null)
                 .build();
     }
 
@@ -77,6 +74,22 @@ public class DishMapper {
                 .id(dto.getId())
                 .name(dto.getName())
 //                .dishes()
+                .build();
+    }
+
+    public static DrinkDTO toDto(Drink drink){
+        return DrinkDTO.builder()
+                .id(drink.getId())
+                .productName(drink.getName())
+                .price(drink.getPrice())
+                .build();
+    }
+
+    public static Drink toEntity(Category category, DrinkDTO dto){
+        return Drink.builder()
+                .name(dto.getProductName())
+                .category(category)
+                .price(dto.getPrice())
                 .build();
     }
 

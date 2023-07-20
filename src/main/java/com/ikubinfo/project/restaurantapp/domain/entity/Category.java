@@ -33,4 +33,7 @@ public class Category extends Auditable<User> {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Dish> dishes;
 
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Drink> drinks;
+
 }

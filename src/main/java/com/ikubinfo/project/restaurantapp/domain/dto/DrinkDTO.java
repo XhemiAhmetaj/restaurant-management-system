@@ -1,21 +1,19 @@
 package com.ikubinfo.project.restaurantapp.domain.dto;
 
+import com.ikubinfo.project.restaurantapp.domain.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CategoryDTO {
+public class DrinkDTO {
+
     private Long id;
-    private String name;
-//    private CategoryDTO categoryParent;
-    private List<CategoryDTO> categoryChild;
-    private List<DishDTO> dishes;
-    private List<DrinkDTO> drinks;
+    private String productName;
+    private Double price;
+
 }

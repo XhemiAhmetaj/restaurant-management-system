@@ -12,5 +12,6 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long> , JpaSpecificationExecutor<Product> {
 
-    List<Product> findProductsByQuantityIsLessThanEqual(Double quantity);
+    List<Product> findProductsByProductQuantityIsLessThanEqual(Integer quantity);
+    List<Product> findProductsByProductWeightIsLessThanEqual(Double weight);
 }

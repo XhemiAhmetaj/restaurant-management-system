@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class ProductUpdatedDTO {
 
     private Long id;
-    private Double quantity;
+    private Double productWeight;
+    private Integer productQuantity;
 }

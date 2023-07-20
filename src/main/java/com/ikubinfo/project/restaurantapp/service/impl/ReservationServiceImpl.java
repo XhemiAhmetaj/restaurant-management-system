@@ -54,7 +54,9 @@ public class ReservationServiceImpl implements ReservationService {
 
         if (tableReservations.isEmpty()) {
                 createReservation(reservation, reservationDTO,table);
+                reservationRepository.save(reservation);
                 if(reservation.getCreatedBy().getEmail().equals("guest@gmail.com")){
+                    reservationRepository.deleteById(reservation.getId());
                     throw new BadRequestException(USER_NOT_AUTHENTICATED);
                 }else {
                     reservationRepository.save(reservation);
@@ -66,7 +68,7 @@ public class ReservationServiceImpl implements ReservationService {
                 emailService.sendEmail(reservation.getCreatedBy().getEmail(), "Reservation Confirmed!",
                         "Dear "+reservation.getCreatedBy().getName()+
                                 "\nYour reservation at our restaurant is confirmed!"+
-                                "\n\nBooking Details"+
+                                "\n\nReservation Details"+
                                 "\nReservation name: "+reservation.getCreatedBy().getName() + " " + reservation.getCreatedBy().getLastname() +
                                 "\nDate: "+reservation.getDate()+
                                 "\nTime: " + reservation.getTime()+

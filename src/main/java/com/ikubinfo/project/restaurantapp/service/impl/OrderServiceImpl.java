@@ -233,9 +233,9 @@ public class OrderServiceImpl implements OrderService {
                             Product product = dishIngredient.getProduct();
                             log.info("-------------------------dishIngredient.getMeasure()------------ "+dishIngredient.getMeasure());
                             log.info("-----------------orderItem.getQuantity()-------------" + orderItem.getQuantity());
-                            log.info("------------------before----------------------" +product.getQuantity());
-                            product.setQuantity(product.getQuantity() - (dishIngredient.getMeasure() * orderItem.getQuantity()));
-                            log.info("------------------after----------------------" +product.getQuantity());
+                            log.info("------------------before----------------------" +product.getProductWeight());
+                            product.setProductWeight(product.getProductWeight() - (dishIngredient.getMeasure() * orderItem.getQuantity()));
+                            log.info("------------------after----------------------" +product.getProductWeight());
 
                     productRepository.save(product);
                         return null;

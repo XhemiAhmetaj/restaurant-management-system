@@ -15,6 +15,7 @@ import com.ikubinfo.project.restaurantapp.repository.CategoryRepository;
 import com.ikubinfo.project.restaurantapp.repository.DishIngredientRepository;
 import com.ikubinfo.project.restaurantapp.repository.DishRepository;
 import com.ikubinfo.project.restaurantapp.repository.ProductRepository;
+import com.ikubinfo.project.restaurantapp.service.CategoryService;
 import com.ikubinfo.project.restaurantapp.service.DishService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class DishServiceImpl implements DishService {
     private final DishRepository dishRepository;
     private final DishIngredientRepository dishIngredient;
     private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
     @Override
     public Dish findById(Long id) {
@@ -42,33 +43,33 @@ public class DishServiceImpl implements DishService {
                         () -> new ResourceNotFoundException(format(DISH_NOT_FOUND,id)));
     }
 
-    @Override
-    public Category findCategoryById(Long id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(format(CATEGORY_NOT_FOUND,id)));
-    }
+//    @Override
+//    public Category findCategoryById(Long id) {
+//        return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(format(CATEGORY_NOT_FOUND,id)));
+//    }
 
-    @Override
-    public CategoryDTO addCategory(Long catId, CategoryDTO categoryDTO) {
-        Category cat = DishMapper.toEntity(categoryDTO);
-        if(catId!=null){
-            cat.setCategoryParent(categoryRepository.findById(catId).orElseThrow(()-> new ResourceNotFoundException(format(CATEGORY_NOT_FOUND,catId))));
-        }else {
-            cat.setCategoryParent(null);
-        }
-        return toDto(categoryRepository.save(cat));
-    }
-
-    @Override
-    public List<CategoryDTO> listCategories() {
-        return categoryRepository.findAll().stream().map(DishMapper::toDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public Void deleteCategory(Long id) {
-        Category category = findCategoryById(id);
-        categoryRepository.delete(category);
-        return null;
-    }
+//    @Override
+//    public CategoryDTO addCategory(Long catId, CategoryDTO categoryDTO) {
+//        Category cat = DishMapper.toEntity(categoryDTO);
+//        if(catId!=null){
+//            cat.setCategoryParent(categoryRepository.findById(catId).orElseThrow(()-> new ResourceNotFoundException(format(CATEGORY_NOT_FOUND,catId))));
+//        }else {
+//            cat.setCategoryParent(null);
+//        }
+//        return toDto(categoryRepository.save(cat));
+//    }
+//
+//    @Override
+//    public List<CategoryDTO> listCategories() {
+//        return categoryRepository.findAll().stream().map(DishMapper::toDto).collect(Collectors.toList());
+//    }
+//
+//    @Override
+//    public Void deleteCategory(Long id) {
+//        Category category = findCategoryById(id);
+//        categoryRepository.delete(category);
+//        return null;
+//    }
 
     @Override
     public List<DishDTO> listAllDishes() {
@@ -87,7 +88,7 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public DishDTO addDish(Long categoryId, DishDTO dto) {
-        Category category = findCategoryById(categoryId);
+        Category category = categoryService.findCategoryById(categoryId);
         Dish dish = dishRepository.save(DishMapper.toEntity(category,dto));
         return toDto(dish);
     }

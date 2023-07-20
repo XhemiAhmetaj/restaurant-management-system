@@ -40,7 +40,6 @@ import static java.lang.String.format;
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final OrderRepository orderRepository;
     private final EmailSenderService emailService;
 
     @Override
@@ -83,7 +82,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.findById(id).ifPresentOrElse(u->{
             u.setDeleted(true);
             userRepository.save(u);
-        },()->new ResourceNotFoundException(format(USER_NOT_FOUND,id)));
+        },null);
 
     }
 
@@ -103,7 +102,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserUpdatedDTO updateUser(Long id, UserUpdatedDTO req) {
         User u = findById(id);
-        u = UserMapper.buildUpdateUser(u,req);
+        UserMapper.buildUpdateUser(u,req);
         u.setPassword(passwordEncoder.encode(req.getPassword()));
         return UserMapper.toUpdateDto(userRepository.save(u));
     }

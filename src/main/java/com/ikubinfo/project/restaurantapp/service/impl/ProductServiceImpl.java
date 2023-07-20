@@ -61,11 +61,19 @@ public class ProductServiceImpl implements ProductService {
     @Scheduled(cron = "0 0 4 1/2 * ?")
     @Override
     public void findProductsWithLessQuantity(){
-        List<ProductDTO> productDTOList = productRepository.findProductsByQuantityIsLessThanEqual(1000.0).stream().map(ProductMapper::toDto).collect(Collectors.toList());
+        List<ProductDTO> productDTOList = productRepository.findProductsByProductWeightIsLessThanEqual(1000.0).stream().map(ProductMapper::toDto).collect(Collectors.toList());
+        List<ProductDTO> product2List = productRepository.findProductsByProductQuantityIsLessThanEqual(20).stream().map(ProductMapper::toDto).collect(Collectors.toList());
         String body = "";
-        if(!productDTOList.isEmpty()){
+        if(!(productDTOList.isEmpty() || product2List.isEmpty())){
             for(ProductDTO product : productDTOList){
-               body = body.concat("Product: "+product.getName() + " Quantity: "+product.getQuantity()+ " " + product.getMeasurement() + "\n");
+               body = body.concat("Product: "+product.getName() + " Weight: "+product.getProductWeight()+ " " + product.getMeasurement() + "\n");
+            }
+
+            for(ProductDTO product : product2List){
+                if(product.getProductQuantity().equals(0)){
+                    continue;
+                }
+                body = body.concat("Product: "+product.getName() + " Quantity: "+product.getProductQuantity()+"\n");
             }
             emailService.sendEmail("xh.ahmetaj22@gmail.com", "Warning! Check low quantity products.!!", body);
         }

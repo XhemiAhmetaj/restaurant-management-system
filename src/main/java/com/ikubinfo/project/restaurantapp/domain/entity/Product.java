@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "product")
+@Table(name = "products")
 @AllArgsConstructor
 @NoArgsConstructor
 @EnableJpaAuditing
@@ -27,7 +27,9 @@ public class Product extends Auditable<User> {
     private String name;
     @Enumerated(EnumType.STRING)
     private Measurement measurement;
-    private Double quantity;
+    private Double productWeight;
+
+    private Integer productQuantity;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<DishIngredient> dishIngredients;
