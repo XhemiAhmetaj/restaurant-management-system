@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class ReceiptController {
         return ResponseEntity.ok(receiptService.getReceipt(receiptId));
     }
 
+    @RolesAllowed({"ADMIN", "RECEPTIONIST"})
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<ReceiptDTO>> getAllUserReceipts(@PathVariable Long userId){
         return ResponseEntity.ok(receiptService.getAllReceiptFromUser(userId));

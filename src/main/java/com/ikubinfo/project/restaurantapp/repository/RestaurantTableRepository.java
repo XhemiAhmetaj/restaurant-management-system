@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface RestaurantTableRepository extends JpaRepository<RestaurantTable,Long> {
 
-    List<RestaurantTable> findRestaurantTablesByTableStatus(TableStatus tableStatus);
+//    List<RestaurantTable> findRestaurantTablesByTableStatus(TableStatus tableStatus);
 
 //    List<RestaurantTable> findRestaurantTablesByStatus_Available();
     List<RestaurantTable> findRestaurantTablesByCapacity(Integer capacity);

@@ -14,8 +14,8 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    @Value("${spring.mail.username}")
-    private String value;
+//    @Value("${spring.mail.username}")
+    private String value = "noreply1233213@gmail.com";
 
     public void sendEmail(String toEmail, String subject, String body){
         SimpleMailMessage message = new SimpleMailMessage();

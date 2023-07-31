@@ -1,10 +1,12 @@
 package com.ikubinfo.project.restaurantapp.domain.entity;
 
+import com.ikubinfo.project.restaurantapp.domain.Auditable;
 import com.ikubinfo.project.restaurantapp.domain.entity.enums.UserRole;
 import lombok.*;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,10 +24,11 @@ import java.util.List;
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
+@EnableJpaAuditing
 @Data
 @Builder
 @Where(clause = "deleted = false")
-public class User implements UserDetails {
+public class User implements UserDetails  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,6 +42,11 @@ public class User implements UserDetails {
     private LocalDate birthday;
 
     private boolean deleted=false;
+
+    @CreatedDate
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
+
 
     @Enumerated(EnumType.STRING)
     private UserRole role;

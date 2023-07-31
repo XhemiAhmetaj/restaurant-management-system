@@ -1,5 +1,6 @@
 package com.ikubinfo.project.restaurantapp.domain.entity;
 
+import com.ikubinfo.project.restaurantapp.domain.Auditable;
 import com.ikubinfo.project.restaurantapp.domain.entity.enums.Measurement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,13 +15,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Builder
-public class DishIngredient {
+public class DishIngredient extends Auditable<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//    @Enumerated(EnumType.STRING)
-//    private Measurement measurement;
     private Double measure;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

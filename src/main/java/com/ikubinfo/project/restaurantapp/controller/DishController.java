@@ -62,29 +62,4 @@ public class DishController {
     public ResponseEntity<List<DishIngredientDTO>> listDishIngredients(@PathVariable Long dishId){
         return ResponseEntity.ok(dishService.listDishIngredients(dishId));
     }
-
-//    @PostMapping("/categories")
-//    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO){
-//        return ResponseEntity.ok(dishService.addCategory(null, categoryDTO));
-//    }
-//    @PostMapping("{categoryId}/categories")
-//    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable Long categoryId){
-//        return ResponseEntity.ok(dishService.addCategory(categoryId, categoryDTO));
-//    }
-//
-//    @GetMapping("/list/categories")
-//    public ResponseEntity<List<CategoryDTO>> listCategories(){
-//        return ResponseEntity.ok(dishService.listCategories());
-//    }
-//
-//    @GetMapping("/category/{categoryId}")
-//    public ResponseEntity<CategoryDTO> findCategoryById(@PathVariable Long categoryId){
-//        CategoryDTO dto = DishMapper.toDto(dishService.findCategoryById(categoryId));
-//        return ResponseEntity.ok(dto);
-//    }
-//
-//    @DeleteMapping("/category/{categoryId}")
-//    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId){
-//        return ResponseEntity.ok(dishService.deleteCategory(categoryId));
-//    }
 }

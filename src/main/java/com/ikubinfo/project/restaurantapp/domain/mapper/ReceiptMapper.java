@@ -14,7 +14,9 @@ public class ReceiptMapper {
 //                .restaurantAddress(receipt.getRestaurant().getAddress())
                 .restaurantName("Restaurant")
 //                .restaurantNipt(receipt.getRestaurant().getNipt())
-                .items(receipt.getOrder().getOrderItems().stream().map(OrderMapper::toDto).collect(Collectors.toList()))
+//                .dishItems(receipt.getOrder().getOrderItems().stream().map(OrderMapper::toDishItemDto).collect(Collectors.toList()))
+//                .drinkItems(receipt.getOrder().getOrderItems().stream().map(OrderMapper::toDrinkItemDto).collect(Collectors.toList()))
+                .orderItems(receipt.getOrder().getOrderItems().stream().map(OrderMapper::toDto).collect(Collectors.toList()))
                 .total(receipt.getOrder().getTotalAmount())
                 .points(receipt.getPoints())
                 .build();

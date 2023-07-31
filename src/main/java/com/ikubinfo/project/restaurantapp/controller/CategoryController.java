@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -16,10 +17,13 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
+    @RolesAllowed({"ADMIN","COOKER"})
     @PostMapping
     public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO){
         return ResponseEntity.ok(categoryService.addCategory(null, categoryDTO));
     }
+
+    @RolesAllowed({"ADMIN","COOKER"})
     @PostMapping("/{categoryId}")
     public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable Long categoryId){
         return ResponseEntity.ok(categoryService.addCategory(categoryId, categoryDTO));
@@ -36,6 +40,7 @@ public class CategoryController {
         return ResponseEntity.ok(dto);
     }
 
+    @RolesAllowed({"ADMIN","COOKER"})
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId){
         return ResponseEntity.ok(categoryService.deleteCategory(categoryId));

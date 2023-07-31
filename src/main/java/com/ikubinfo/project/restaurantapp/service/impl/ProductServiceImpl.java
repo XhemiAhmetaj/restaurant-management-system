@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ikubinfo.project.restaurantapp.domain.Constants.ADMIN_EMAIL_ADDRES;
+import static com.ikubinfo.project.restaurantapp.domain.Constants.WARNING_EMAIL_SUBJECT;
 import static com.ikubinfo.project.restaurantapp.domain.exception.ExceptionConstants.PRODUCT_NOT_FOUND;
 import static com.ikubinfo.project.restaurantapp.domain.mapper.ProductMapper.toDto;
 import static java.lang.String.format;
@@ -51,6 +53,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductDTO findProductById(Long productId){
+        Product product =  productRepository.findById(productId).orElseThrow(()-> new ResourceNotFoundException(format(PRODUCT_NOT_FOUND,productId)));
+        return toDto(product);
+    }
+
+    @Override
     public ProductDTO updateProduct(Long id, ProductUpdatedDTO dto) {
         Product product = productRepository.findById(id).orElseThrow(
                 ()->new ResourceNotFoundException(format(PRODUCT_NOT_FOUND,id)));
@@ -75,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
                 }
                 body = body.concat("Product: "+product.getName() + " Quantity: "+product.getProductQuantity()+"\n");
             }
-            emailService.sendEmail("xh.ahmetaj22@gmail.com", "Warning! Check low quantity products.!!", body);
+            emailService.sendEmail(ADMIN_EMAIL_ADDRES, WARNING_EMAIL_SUBJECT, body);
         }
     }
 

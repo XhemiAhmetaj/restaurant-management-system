@@ -1,6 +1,5 @@
 package com.ikubinfo.project.restaurantapp.repository;
 
-import com.ikubinfo.project.restaurantapp.domain.dto.OrderItemDTO;
 import com.ikubinfo.project.restaurantapp.domain.entity.Order;
 import com.ikubinfo.project.restaurantapp.domain.entity.User;
 import com.ikubinfo.project.restaurantapp.domain.entity.enums.OrderStatus;
@@ -8,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 

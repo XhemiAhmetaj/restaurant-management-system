@@ -12,16 +12,17 @@ import java.util.List;
 
 public interface UserService {
 
-    User findById(Long id);
+    UserDTO findById(Long id);
     List<UserDTO> findAllUsers();
     UserDTO registerUser(UserDTO req, String userRole);
     void deleteUser(Long id);
     User getUserFromToken(Jwt jwt);
     List<UserDTO> findUserByRole(String role);
-    UserUpdatedDTO updateUser(Long id, UserUpdatedDTO u);
+    UserUpdatedDTO updateUser( UserUpdatedDTO u);
 
     Page<UserDTO> findUserByRole (String role, PageParameterDTO pageDTO);
     Page<UserDTO> filterUsers(List<SearchCriteria> searchCriteria, PageParameterDTO pageDTO);
 
-    void getSpecialOffer();
+    void getOffer();
+    void getBirthdayOffer();
 }

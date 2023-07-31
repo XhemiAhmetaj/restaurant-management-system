@@ -32,11 +32,13 @@ public class ProductController {
         return ResponseEntity.ok(productService.listAllProducts());
     }
 
+    @RolesAllowed({"ADMIN","COOKER"})
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductUpdatedDTO dto, @PathVariable Long id){
         return ResponseEntity.ok(productService.updateProduct(id, dto));
     }
 
+    @RolesAllowed({"ADMIN","COOKER"})
     @PostMapping("/list")
     public ResponseEntity<Page<ProductDTO>> filterProducts (@RequestBody List<SearchCriteria> criteria, PageParameterDTO pageParameterDTO) {
         return ResponseEntity.ok(productService.filterProducts(criteria,pageParameterDTO));

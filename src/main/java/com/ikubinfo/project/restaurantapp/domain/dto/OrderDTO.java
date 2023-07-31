@@ -1,7 +1,6 @@
 package com.ikubinfo.project.restaurantapp.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +20,5 @@ public class OrderDTO {
     private Long tableId;
     @JsonIgnore
     private Integer points;
-//    @JsonIgnore
-//    private Long receiptId;
+
 }

@@ -1,5 +1,6 @@
 package com.ikubinfo.project.restaurantapp.domain.entity;
 
+import com.ikubinfo.project.restaurantapp.domain.Auditable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
-public class Receipt {
+public class Receipt extends Auditable<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,6 +5,7 @@ import com.ikubinfo.project.restaurantapp.domain.dto.ReservationDTO;
 import com.ikubinfo.project.restaurantapp.domain.entity.Reservation;
 import com.ikubinfo.project.restaurantapp.domain.entity.RestaurantTable;
 import com.ikubinfo.project.restaurantapp.domain.entity.TableReservation;
+import com.ikubinfo.project.restaurantapp.domain.entity.User;
 import com.ikubinfo.project.restaurantapp.domain.entity.enums.TableStatus;
 import com.ikubinfo.project.restaurantapp.domain.exception.BadRequestException;
 import com.ikubinfo.project.restaurantapp.domain.exception.ResourceNotFoundException;
@@ -14,6 +15,7 @@ import com.ikubinfo.project.restaurantapp.repository.RestaurantTableRepository;
 import com.ikubinfo.project.restaurantapp.repository.TableReservationRepository;
 import com.ikubinfo.project.restaurantapp.service.EmailSenderService;
 import com.ikubinfo.project.restaurantapp.service.ReservationService;
+import com.ikubinfo.project.restaurantapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,10 +25,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.ikubinfo.project.restaurantapp.configuration.SecurityConfig.getJwt;
+import static com.ikubinfo.project.restaurantapp.domain.Constants.*;
 import static com.ikubinfo.project.restaurantapp.domain.exception.ExceptionConstants.*;
 import static com.ikubinfo.project.restaurantapp.domain.mapper.RestaurantMapper.*;
 import static java.lang.String.format;
@@ -40,6 +45,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final RestaurantTableRepository tableRepository;
     private final TableReservationRepository tableReservationRepository;
     private final EmailSenderService emailService;
+    private final UserService userService;
 
     @Override
     public ReservationDTO reserveTable(ReservationDTO reservationDTO){
@@ -47,15 +53,28 @@ public class ReservationServiceImpl implements ReservationService {
         TableReservation tableReservation = new TableReservation();
         RestaurantTable table = tableRepository.findById(reservationDTO.getTableId()).orElseThrow();
 
+        User u = userService.getUserFromToken(getJwt());
+        if(u.getEmail().equals(GUEST_EMAIL_ADDRESS)){
+            throw new BadRequestException(USER_NOT_AUTHENTICATED);
+        }
+
+        if(reservationDTO.getDate().isBefore(LocalDate.now())&&reservationDTO.getTime().isBefore(LocalTime.now().plusMinutes(50))){
+            throw new BadRequestException(RESERVATION_FAILED);
+        }
+
+
         List<TableReservation> tableReservations = tableReservationRepository.findAllByDate(reservationDTO.getDate()).stream()
                         .filter(t-> (reservationDTO.getTime().isAfter(t.getStartTime().minusMinutes(115)) &&
                                         reservationDTO.getTime().isBefore(t.getStartTime().plusMinutes(115))))
+                .filter(t->t.getTableReservation().equals(table))
                                 .collect(Collectors.toList());
+
+        log.info("----------------tableReservation.size---------" + tableReservations.size());
 
         if (tableReservations.isEmpty()) {
                 createReservation(reservation, reservationDTO,table);
                 reservationRepository.save(reservation);
-                if(reservation.getCreatedBy().getEmail().equals("guest@gmail.com")){
+                if(reservation.getCreatedBy().getEmail().equals(GUEST_EMAIL_ADDRESS)){
                     reservationRepository.deleteById(reservation.getId());
                     throw new BadRequestException(USER_NOT_AUTHENTICATED);
                 }else {
@@ -65,17 +84,14 @@ public class ReservationServiceImpl implements ReservationService {
                 createTableReservation(reservation, tableReservation, table);
                 tableReservationRepository.save(tableReservation);
 
-                emailService.sendEmail(reservation.getCreatedBy().getEmail(), "Reservation Confirmed!",
-                        "Dear "+reservation.getCreatedBy().getName()+
-                                "\nYour reservation at our restaurant is confirmed!"+
-                                "\n\nReservation Details"+
-                                "\nReservation name: "+reservation.getCreatedBy().getName() + " " + reservation.getCreatedBy().getLastname() +
-                                "\nDate: "+reservation.getDate()+
-                                "\nTime: " + reservation.getTime()+
-                                "\nNumber of People: " + reservation.getNumberOfPeople()+
-                                "\nTable: "+ reservation.getTable().getTableId() + " " + reservation.getTable().getDescription()+
-                                "\n\nWe hope you have a great time!"+
-                                "\n\nAll the best, \nReservationTeam");
+                emailService.sendEmail(reservation.getCreatedBy().getEmail(), EMAIL_CONFIRMATION_SUBJECT,
+                        format(EMAIL_CONFIRMATION_BODY,reservation.getCreatedBy().getName(),
+                                reservation.getCreatedBy().getName() , reservation.getCreatedBy().getLastname() ,
+                                reservation.getDate(),
+                                reservation.getTime(),
+                                reservation.getNumberOfPeople(),
+                                reservation.getTable().getTableId()
+                                ));
 
             }else {
                 throw new BadRequestException(TABLE_TIME_RESERVED);

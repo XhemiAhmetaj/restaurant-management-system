@@ -18,9 +18,7 @@ public class UserSpecification extends GenericSpecification<User> {
     }
 
     public static Specification<User> toSpecification(List<SearchCriteria> filters) {
-
-        log.info("filters {}",filters.size());
-        Specification<User> specification = null;//= new UserSpecification();
+        Specification<User> specification = null;
 
         for (SearchCriteria filter : filters) {
             if (specification == null){
@@ -29,7 +27,6 @@ public class UserSpecification extends GenericSpecification<User> {
                 specification = specification.and(new UserSpecification(filter));
             }
         }
-
         return specification;
     }
 

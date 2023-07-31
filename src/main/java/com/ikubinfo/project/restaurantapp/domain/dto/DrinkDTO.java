@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,7 +15,9 @@ import lombok.NoArgsConstructor;
 public class DrinkDTO {
 
     private Long id;
+    @NotNull(message = "Name is required")
     private String productName;
+    @NotNull(message = "Price is required")
     private Double price;
 
 }

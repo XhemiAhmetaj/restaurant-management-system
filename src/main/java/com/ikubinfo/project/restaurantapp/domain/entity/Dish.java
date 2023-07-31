@@ -35,8 +35,8 @@ public class Dish extends Auditable<User> {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "menu_id", referencedColumnName = "id")
-    private Menu menu;
+//    @ManyToOne
+//    @JoinColumn(name = "menu_id", referencedColumnName = "id")
+//    private Menu menu;
 
 }

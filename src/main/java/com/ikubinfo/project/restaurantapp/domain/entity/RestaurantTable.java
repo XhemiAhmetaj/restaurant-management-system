@@ -23,8 +23,8 @@ public class RestaurantTable extends Auditable<User> {
     private Long tableId;
     private Integer capacity;
     private String description;
-    @Enumerated(EnumType.STRING)
-    private TableStatus tableStatus;
+//    @Enumerated(EnumType.STRING)
+//    private TableStatus tableStatus;
 
     @OneToMany(mappedBy = "table", cascade = CascadeType.ALL)
     private List<Order> orders;

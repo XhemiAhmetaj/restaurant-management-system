@@ -43,34 +43,6 @@ public class DishServiceImpl implements DishService {
                         () -> new ResourceNotFoundException(format(DISH_NOT_FOUND,id)));
     }
 
-//    @Override
-//    public Category findCategoryById(Long id) {
-//        return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(format(CATEGORY_NOT_FOUND,id)));
-//    }
-
-//    @Override
-//    public CategoryDTO addCategory(Long catId, CategoryDTO categoryDTO) {
-//        Category cat = DishMapper.toEntity(categoryDTO);
-//        if(catId!=null){
-//            cat.setCategoryParent(categoryRepository.findById(catId).orElseThrow(()-> new ResourceNotFoundException(format(CATEGORY_NOT_FOUND,catId))));
-//        }else {
-//            cat.setCategoryParent(null);
-//        }
-//        return toDto(categoryRepository.save(cat));
-//    }
-//
-//    @Override
-//    public List<CategoryDTO> listCategories() {
-//        return categoryRepository.findAll().stream().map(DishMapper::toDto).collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public Void deleteCategory(Long id) {
-//        Category category = findCategoryById(id);
-//        categoryRepository.delete(category);
-//        return null;
-//    }
-
     @Override
     public List<DishDTO> listAllDishes() {
         return dishRepository.findAll()

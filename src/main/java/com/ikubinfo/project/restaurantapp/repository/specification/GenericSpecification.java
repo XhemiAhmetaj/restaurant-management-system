@@ -16,8 +16,6 @@ import javax.persistence.criteria.Root;
 public class GenericSpecification<T> implements Specification<T> {
     protected SearchCriteria criteria;
     private Logger logger = LoggerFactory.getLogger(GenericSpecification.class);
-//    public  SearchCriteria getSearchCriteria();
-
 
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {

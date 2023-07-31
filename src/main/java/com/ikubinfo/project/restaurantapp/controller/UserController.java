@@ -37,16 +37,15 @@ public class UserController {
     @RolesAllowed("ADMIN")
     @GetMapping("/admin/{id}")
     public ResponseEntity<UserDTO> findUser(@PathVariable Long id){
-        User u = userService.findById(id);
-        return ResponseEntity.ok(UserMapper.toDto(u));
+        return ResponseEntity.ok(userService.findById(id));
     }
-
     @RolesAllowed("ADMIN")
     @GetMapping
     public ResponseEntity<List<UserDTO>> returnAllUsers(){
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
+    @RolesAllowed("ADMIN")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id){
         userService.deleteUser(id);
@@ -59,17 +58,18 @@ public class UserController {
         return ResponseEntity.ok(userService.findUserByRole(userRole));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserUpdatedDTO> updateUser(@RequestBody UserUpdatedDTO req, @PathVariable Long id){
-        UserUpdatedDTO u =userService.updateUser(id, req);
+    @PutMapping("")
+    public ResponseEntity<UserUpdatedDTO> updateUser(@RequestBody UserUpdatedDTO req){
+        UserUpdatedDTO u =userService.updateUser(req);
         return ResponseEntity.ok(u);
     }
 
+    @RolesAllowed("ADMIN")
     @GetMapping("/list/{role}")
     public ResponseEntity<Page<UserDTO>> getUsersByRole(@PathVariable String role, PageParameterDTO pageParameterDTO){
         return ResponseEntity.ok(userService.findUserByRole(role,pageParameterDTO));
     }
-
+    @RolesAllowed("ADMIN")
     @PostMapping("/list")
     public ResponseEntity<Page<UserDTO>> filterUsers (@RequestBody List<SearchCriteria> criteria, PageParameterDTO pageParameterDTO) {
         return ResponseEntity.ok(userService.filterUsers(criteria,pageParameterDTO));

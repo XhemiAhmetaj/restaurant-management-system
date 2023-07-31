@@ -19,6 +19,6 @@ public class RestaurantTableDTO {
     private Long tableId;
     private Integer capacity;
     private String description;
-    private String status;
+//    private String status;
 
 }

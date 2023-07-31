@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.ikubinfo.project.restaurantapp.domain.exception.ExceptionConstants.CATEGORY_NOT_FOUND;
-import static com.ikubinfo.project.restaurantapp.domain.exception.ExceptionConstants.DISH_NOT_FOUND;
 import static com.ikubinfo.project.restaurantapp.domain.mapper.DishMapper.toDto;
 import static java.lang.String.format;
 
@@ -47,8 +46,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Void deleteCategory(Long id) {
-        Category category = findCategoryById(id);
-        categoryRepository.delete(category);
+        categoryRepository.findById(id).ifPresentOrElse(c->{
+            c.setDeleted(true);
+            categoryRepository.save(c);
+        },null);
         return null;
     }
 }

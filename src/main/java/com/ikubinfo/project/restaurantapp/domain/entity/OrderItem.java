@@ -1,5 +1,6 @@
 package com.ikubinfo.project.restaurantapp.domain.entity;
 
+import com.ikubinfo.project.restaurantapp.domain.Auditable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Builder
-public class OrderItem {
+public class OrderItem extends Auditable<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,5 +31,9 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "dish_id", referencedColumnName = "id")
     private Dish dish;
+
+    @ManyToOne
+    @JoinColumn(name = "drink_id", referencedColumnName = "id")
+    private Drink drink;
 
 }

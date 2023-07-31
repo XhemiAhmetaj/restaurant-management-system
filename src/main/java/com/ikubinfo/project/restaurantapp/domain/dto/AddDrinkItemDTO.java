@@ -5,16 +5,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AddItemDTO {
-
+public class AddDrinkItemDTO {
     private Long id;
+    @NotNull(message = "Quantity is required!")
+    @NotEmpty
     private Integer quantity;
-    private Long dishId;
+    @NotNull(message = "Drink is required!")
+    @NotEmpty
+    private Long drinkId;
 }

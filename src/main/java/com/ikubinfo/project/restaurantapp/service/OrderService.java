@@ -8,9 +8,11 @@ import java.util.List;
 
 public interface OrderService {
 
-    OrderDTO addItemToOrder(Long tableId, AddItemDTO itemDTO);
+//    OrderDTO addItemToOrder(Long tableId, AddDishItemDTO itemDTO);
 
-    Void removeItem(Long orderId, Long itemId);
+    OrderDTO addItemToOrder(Long tableId, AddDishItemDTO dishItemDTO, AddDrinkItemDTO drinkItemDTO);
+
+    String removeItem(Long orderId, Long itemId);
     OrderDTO getOrder(Long id);
     List<OrderDTO> getAllUserOrders(Long user_id);
     List<OrderDTO> getAllOrders();
@@ -18,7 +20,7 @@ public interface OrderService {
 
     ReceiptDTO placeOrder(Long orderId, CheckOutDTO checkOutDTO);
 
-    Void changeStatus(Long orderId, String status);
+    String changeStatus(Long orderId, String status);
 
     Page<OrderDTO> filterOrders(List<SearchCriteria> searchCriteria, PageParameterDTO pageDTO);
 }

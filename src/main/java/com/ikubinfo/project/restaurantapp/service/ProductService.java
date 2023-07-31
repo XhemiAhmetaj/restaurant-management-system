@@ -14,6 +14,8 @@ public interface ProductService {
     ProductDTO addProduct(ProductDTO dto);
     List<ProductDTO> listAllProducts();
 
+    ProductDTO findProductById(Long productId);
+
     ProductDTO updateProduct(Long id, ProductUpdatedDTO dto);
 
     void findProductsWithLessQuantity();

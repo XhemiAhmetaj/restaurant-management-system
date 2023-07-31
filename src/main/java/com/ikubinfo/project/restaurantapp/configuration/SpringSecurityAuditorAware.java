@@ -22,6 +22,12 @@ public class SpringSecurityAuditorAware implements AuditorAware<User> {
     }
     @Override
     public Optional<User> getCurrentAuditor() {
+//        String sub = null;
+//        if(SecurityContextHolder.getContext().getAuthentication()!=null){
+//            Jwt principal = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            sub = (String) principal.getClaims().get("sub");
+//        }
+//        return sub==null?Optional.empty():userRepository.findByEmail(sub);
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var sub = (String) jwt.getClaims().get("sub");
         entityManager.setFlushMode(FlushModeType.COMMIT);

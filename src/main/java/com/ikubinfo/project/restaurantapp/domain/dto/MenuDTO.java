@@ -14,5 +14,6 @@ import java.util.List;
 public class MenuDTO {
 
     private Long id;
-    private List<CategoryDTO> categoryDTOList;
+    private List<MenuItemDTO> items;
+    private String status;
 }
